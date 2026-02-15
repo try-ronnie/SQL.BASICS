@@ -1,0 +1,5 @@
+CREATE TABLE animals (
+id INTERGER PRIMARY KEY,
+name TEXT ,
+age INTERGER ,
+breed TEXT);
