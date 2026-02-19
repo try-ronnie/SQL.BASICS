@@ -1,0 +1,1 @@
+ALTER TABLE gays DROP COLUMN age 

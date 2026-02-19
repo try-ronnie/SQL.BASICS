@@ -4,7 +4,7 @@
 
 
 ### command : sqlite 3 creating a database
-to start sql  ```sqlite3 pet_database.db``` 
+to start sql  ```sqlite3 pet_database.db```  (this is just like creating the file) .... it then means that you are going to work on that database
 then we need to create a table format indie the db file .... 
 SQLite expects us to include at least some definition of the structure of this table as well. In other words, when we create database tables, we need to specify some column names, along with the type of data we are planning to store in each column. More on data types later.
 ```
@@ -114,3 +114,19 @@ With these three types in hand, we are going to be able to work our way through 
 >For example, INT is a common datatype used outside of SQLite. SQLite won't complain if you define a column as an INT datatype. It will simply lump it into the INTEGER category and store it as such.
 >Boolean values are also stored as integers (0 for false, 1 for true).
 >To accommodate this, SQLite has a pretty complicated system of categorizing datatypes that involves Storage Classes, Type Affinities, and Datatypes. For a deeper dive, check out the [documentation](http://www.sqlite.org/datatype3.)
+
+### LESSON 5 CRUD OPERATIOS IN SQL
+create, Read , update and delete actions in database
+
+
+this done in [github.repo](https://github.com/try-ronnie/python-p3-sql-crud#)
+
+these are the actions :
+    1. INSERT INTO 
+      ```INSERT INTO cats (name, age, breed) VALUES ('Maru', 3, 'Scottish Fold');```
+> We use the INSERT INTO command, followed by the name of the table to which we    want to add data. Then, in parentheses, we put the column names that we will be filling with data. This is followed by the VALUES keyword, which is accompanied by a parentheses
+>Important: Note that we didn't specify the "id" column name or value. Since we created the cats table with an "id" column whose type is INTEGER PRIMARY KEY, we don't have to specify the id column values when we insert data. Primary Key columns are auto-incrementing. As long as you have defined an id column with a data type of INTEGER PRIMARY KEY, a newly inserted row's id column will be automatically given the correct value.
+>THIS COMMAND CAN SRTILL BE USED IN FILE WITH SQL LANGUAGE
+
+
+> ### REMEMBER that for sql command we must end all of them with semicolons 
