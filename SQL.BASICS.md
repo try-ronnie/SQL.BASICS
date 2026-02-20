@@ -236,4 +236,85 @@ SO when we update We say :
 
 4. DELETE
 A boilerplate DELETE statement looks like this:
+``` DELETE FROM [table name] WJERE [column name] = [value]```
 
+in the case of wanting to eliminate whitespaces in our table when getting the data or we maybe we want to get values but we cant since the user included white spaces 
+
+``` DELETE FROM shcool WHERE TRIM(name) = 'dj khalid'```
+this ensures athat we trima ny white spaces that come along 
+
+💡 Tip: You can check if there are hidden spaces by doing
+SELECT '"' || name || '"' FROM school;
+It will wrap the name in quotes so you can see extra spaces clearly.
+1. TRIM / LTRIM / RTRIM
+
+Purpose: Remove whitespace (or other characters) from strings.
+
+Syntax:
+
+TRIM(column)        -- removes spaces from both ends
+LTRIM(column)       -- removes spaces from the left/start
+RTRIM(column)       -- removes spaces from the right/end
+
+
+Example:
+
+SELECT TRIM(name) FROM school;
+DELETE FROM school WHERE TRIM(name) = 'dj khalid';
+
+2. UPPER / LOWER
+
+Purpose: Convert strings to uppercase or lowercase. Useful when your data has inconsistent casing.
+
+Example:
+
+SELECT * FROM school WHERE UPPER(name) = 'DJ KHALID';
+SELECT LOWER(name) FROM school;
+
+3. LENGTH
+
+Purpose: Count the number of characters in a string.
+
+Example:
+
+SELECT name, LENGTH(name) FROM school;
+-- Can help find hidden trailing spaces
+
+4. SUBSTR
+
+Purpose: Extract part of a string.
+
+Syntax: SUBSTR(column, start, length)
+
+Example:
+
+SELECT SUBSTR(name, 1, 5) FROM school;
+-- Will return first 5 characters
+
+5. REPLACE
+
+Purpose: Replace all occurrences of a substring with another substring.
+
+Example:
+
+SELECT REPLACE(name, ' ', '') FROM school;
+-- Removes all spaces from names
+
+6. LIKE / GLOB
+
+Purpose: Pattern matching.
+
+Example:
+
+SELECT * FROM school WHERE name LIKE 'dj khalid%';
+-- % = any characters after "dj khalid"
+
+Quick Combo for Cleaning Names
+
+If you want to delete rows ignoring extra spaces and case:
+
+DELETE FROM school
+WHERE UPPER(TRIM(name)) = UPPER('dj khalid');
+
+
+This is a robust pattern because it ignores hidden spaces and casing issues.
