@@ -130,3 +130,110 @@ these are the actions :
 
 
 > ### REMEMBER that for sql command we must end all of them with semicolons 
+    2. SELECT FROM :
+    ```SELECT [names of columns we are going to select] FROM [table we are selecting from]```
+    SELECT column FROM
+
+    We specify the names of the columns we want to SELECT and then tell SQL the table we want to select them FROM.
+
+We want to select all the rows in our table, and we want to return the data stored in any and all columns in those rows. To do this, we could pass the name of each column explicitly.
+
+For the rest of this code along, you can run the SQL commands one of two ways, depending on your preference.
+
+You can either open the database using the sqlite3 CLI, and run the SQL commands from the terminal:  sqlite3 pets_database.db
+
+Depending on which examples to use we can use this it it should return the respective columns the user had selected ... 
+A faster way to get data from every column in our table is to use a special selector, known commonly as the 'wildcard' selector *. The * selector means: "Give me all the data from all the columns for all of the cats" Using the wildcard, we can SELECT all the data from all of the columns in the cats table like this:
+```SELECT * FROM cats;```
+
+>SELECT name, age FROM cats;
+Top-Tip: If you have duplicate data (for example, two cats with the same name) and you only want to select unique values, you can use the DISTINCT keyword. For example:
+
+SELECT DISTINCT name FROM cats;
+
+
+so if we wrote 
+SELECT name FROM cats;
+
+and it returned :  
+        LUNA 
+        TEMBO 
+        LUNA 
+        GOMA 
+
+If we wanted no repetitive name sin our listings .... 
+SELECT DISTINCT name FROM cats ;
+
+hen the result would be :
+        LUNA 
+        TEMBI
+        GOMA
+
+but if we used 
+SELECT DISTINCT name , age FROM cats ;
+      LUNA - 5 
+      TEMBO -3
+      GOMA -12
+      LUNA - 6
+
+not that this time select doesnt remove 'LUNA' since both have different ages hence it differentiates them 
+but if the had the same age then they would both be removed and takenin as one since both are duplicates according to the colums that were selected 
+🎯 Key Rule
+
+DISTINCT means:
+
+"Remove rows where all selected column values are exactly the same."
+
+It does NOT:
+
+Identify “original” rows
+
+Compare IDs unless you select them
+
+Know which record came first (unless you use ORDER BY)
+
+🧩 Simple Mental Model
+
+Think of DISTINCT like this:
+
+It puts the results in a basket and says:
+
+"If I already saw this exact value before, don’t show it again."
+
+That’s it.
+
+***Selecting Based on Conditions: The WHERE Clause***
+What happens when we want to retrieve a specific table row? For example the row that belongs to Maru? Or to retrieve all the baby cats who are younger than two years old? We can use the WHERE keyword to select data based on specific conditions. Here's an example of a boilerplate SELECT statement using a WHERE clause.
+
+its a conditional that only returns the values in the tbale that meet the requirement:
+
+``` SELECT * FROM [table name] WHERE [Column-anme]= [some value ];```
+meaning that every value from the column selected should be return only if they meet the condition (of some value)
+We can also use comparison operators, like < or > to select specific data. Let's give it a shot. Use the following statement to select the young cats:
+
+>***ALWAYS REMEMBER WHT FOLLOWS SELECT IS THE COLUMN TO BE RETRIEVED FOR CHECKING***
+
+
+3. UPDATE 
+a boiler plate update state ments looks like this
+```UPDATE [table name] SET [column name] = [new value] WHERE [column name] = [value];```
+The UPDATE statement uses a WHERE clause to grab the row you want to update. It identifies the table name you are looking in and resets the data in a particular column to a new value.
+
+this isnt quite heavy , we just eed to know that ,
+we say UPDATE (table) and set the value you want to give 
+where the condtion is that in that column the value that we want to change
+
+update -> set new value  from the coum name -> where the column had the old value ;
+
+SO when we update We say :
+  1. which table (```UPDATE school```)
+  2.  set the column where the value whill be plced , so we have to name the column then value to be set i it (```SET name = "value"```)
+  3. then we introduce where ... cause ofc where the previous value was .... the column name and the value
+  (```WHERE name = "KAMOTHO```)
+
+
+
+
+4. DELETE
+A boilerplate DELETE statement looks like this:
+
