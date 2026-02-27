@@ -1,320 +1,676 @@
-## prior coding knowledge is required
-# LESSON 1 : BACIC SQL COMMANDS 
-## sql is a klanguage used to maintain relational databases
+# SQL Basics Guide
 
+> **Prerequisites:** Prior coding knowledge is recommended
 
-### command : sqlite 3 creating a database
-to start sql  ```sqlite3 pet_database.db```  (this is just like creating the file) .... it then means that you are going to work on that database
-then we need to create a table format indie the db file .... 
-SQLite expects us to include at least some definition of the structure of this table as well. In other words, when we create database tables, we need to specify some column names, along with the type of data we are planning to store in each column. More on data types later.
+---
+
+## Table of Contents
+- [Lesson 1: Basic SQL Commands](#lesson-1-basic-sql-commands)
+- [Lesson 2: Writing SQL in a Text Editor](#lesson-2-writing-sql-in-a-text-editor)
+- [Lesson 3: Data Types in SQL](#lesson-3-data-types-in-sql)
+- [Lesson 4: CRUD Operations](#lesson-4-crud-operations)
+- [Lesson 5: String Functions & Data Cleaning](#lesson-5-string-functions--data-cleaning)
+
+---
+
+## Lesson 1: Basic SQL Commands
+
+SQL is a language used to maintain relational databases.
+
+### Creating a Database
+
+To start working with SQLite:
+
+```bash
+sqlite3 pet_database.db
 ```
+
+This creates a new database file (or opens an existing one).
+
+### Creating a Table
+
+When creating tables, you must define the structure including column names and data types:
+
+```sql
 CREATE TABLE cats (
   id INTEGER PRIMARY KEY,
   name TEXT,
   age INTEGER
 );
 ```
-Let's break down the above code:
 
-Use the CREATE TABLE command to create a new table called "cats".
-Include a list of column names along with the type of data they will be storing. TEXT means we'll be storing plain old text, INTEGER means we'll store a number. Note that the use of capitalization is arbitrary, but it is a convention to help separate the SQL commands from the names we make up for our tables and columns.
-Every table we create, regardless of the other column names and data types, should be defined with an id INTEGER PRIMARY KEY column, including the integer data type and primary key designation. Our SQLite database tables must be indexed by a number. We want each row in our table to have a number, which we'll call "id", just like in an Excel spreadsheet. Numbering our table rows makes our data that much easier to access, update, and organize. SQLite comes with a data type designation called "Primary Key". Primary keys are unique and auto-incrementing, meaning they start at 1 and each new row automatically gets assigned the next numeric value. 
+**Key Points:**
+- `CREATE TABLE` command creates a new table
+- Column names are followed by their data type (TEXT, INTEGER, etc.)
+- Every table should have an `id INTEGER PRIMARY KEY` column
+- Primary keys are unique and auto-incrementing (start at 1)
+- SQL commands are case-insensitive, but UPPERCASE for keywords is convention
 
-### command 2 : **Alter Table**
-Let's say that, after creating a database and creating a table to live inside that database, we decide we want to add or remove a column. We can do so with the ALTER TABLE statement.
+### Altering a Table
 
-Let's say we want to add a new column, breed, to our cats table:
+Add a new column to an existing table:
 
-```ALTER TABLE cats ADD COLUMN breed TEXT;```
-
-Let's check out our schema now:
+```sql
+ALTER TABLE cats ADD COLUMN breed TEXT;
 ```
-sqlite> .schema
-CREATE TABLE cats (
-  id INTEGER PRIMARY KEY,
-  name TEXT,
-  age INTEGER,
-  breed TEXT ## new coulmn made ....
-);
+
+Check your table structure:
+
+```bash
+.schema
 ```
-Notice that the ALTER statement isn't here, but instead SQLite has updated our original CREATE statement. The schema reflects the current structure of the database, which is reflected as the CREATE statement necessary to create that structure.
 
-Unfortunately, altering a column name and/or deleting a column can be tricky in SQLite3. There are workarounds, however. We're not going to get into that right now, but you can explore...
+**Note:** Altering or deleting columns in SQLite3 can be tricky and requires workarounds.
 
-command 3 : DROPPING A TABLE
-practically just deleting a table 
+### Dropping a Table
 
-Deleting a table is very simple:
+Delete a table completely:
 
-```DROP TABLE cats;```
-And that's it! You can exit out of the sqlite prompt with the .quit command.
-
-
-FLOW: sqlite3 <database.db>
-      create table with the info required
-
-
-### LESSON 2 :  WRITING SQL IN A TEXT EDITOR
-
-SQL is a programming language like any other, so we can write SQL in our text editor and execute it. This allows us to keep better track of our SQL code, including the SQL statements that create tables and query data from those tables.
-
-To write SQL in our text editor and execute that SQL against a specific database, we'll create files in our text editor that have the .sql extension. These files will contain valid SQL code. Then, we can execute these files against our database in the command line. We'll take a look at this process together in the following code along.
-
-
-create a file with the **.sql** extension
-
-then the same commands used in the terminal can be written in those files separately ... there should be a file to ADD A COLUMN using the command 
+```sql
+DROP TABLE cats;
 ```
-ALTER TABLE animals ADD COLUMN price INTERGER
+
+Exit SQLite:
+
+```bash
+.quit
 ```
-the above code is then stored in an SQL file with a name like *add_column.sql*
 
-example in SQL TEXT EDITING  the concept is that you use a file with the pre-written SQL command instead of typing every single time in  the terminal then inorder to use it 
+---
 
-then in the terminal ...
-with the premade databse inorder to put the file in action
-:
+## Lesson 2: Writing SQL in a Text Editor
+
+Instead of typing commands directly in the terminal, you can write SQL in `.sql` files and execute them.
+
+### Workflow
+
+1. **Create a file** with `.sql` extension (e.g., `add_column.sql`)
+
+2. **Write your SQL command:**
+   ```sql
+   ALTER TABLE animals ADD COLUMN price INTEGER;
+   ```
+
+3. **Execute the file** against your database:
+   ```bash
+   sqlite3 animals_database.db < add_column.sql
+   ```
+
+This approach helps you:
+- Keep track of your SQL code
+- Reuse commands easily
+- Maintain version control
+
+---
+
+## Lesson 3: Data Types in SQL
+
+### Why Data Types Matter
+
+Typing allows databases to:
+- Store data efficiently
+- Perform operations predictably (e.g., SUM, sorting)
+- Validate and restrict data
+- Prevent messy, inconsistent data
+
+**Example Problem:**
+
+| name     | breed              | age |
+|----------|-------------------|-----|
+| Maru     | Scottish Fold     | 3   |
+| Hannah   | Tabby             | two |
+| Lil' Bub | American Shorthair| 5.5 |
+
+Without proper typing, operations like `SUM(age)` become unpredictable.
+
+### SQLite Data Types
+
+SQLite has 5 basic data type categories:
+
+#### 1. **NULL**
+Represents "no value" (like `null` in JavaScript or `None` in Python)
+
+#### 2. **TEXT**
+Any alphanumeric characters as plain text
+- Names, email addresses, descriptions
+- Example: `'Maru'`, `'Scottish Fold'`
+
+#### 3. **INTEGER**
+Whole numbers without decimals
+- Use for: IDs, ages, counts, quantities
+- Allows mathematical operations and numeric sorting
+- Example: `3`, `42`, `1000`
+
+#### 4. **REAL**
+Decimal numbers (floating point)
+- SQLite stores up to 15 characters
+- Example: `1.3`, `2.25`, `1234.5678912345`
+- Called "double precision" in other databases
+
+#### 5. **BLOB**
+Binary Large Object - stores binary data
+- Not commonly used in basic operations
+- Example: images, files
+
+### Bonus: Type Compatibility
+
+SQLite accepts common datatypes from other databases (MySQL, PostgreSQL):
+- `INT` → stored as `INTEGER`
+- `BOOLEAN` → stored as `INTEGER` (0 = false, 1 = true)
+- `VARCHAR` → stored as `TEXT`
+
+For more details, see the [SQLite documentation](http://www.sqlite.org/datatype3.html).
+
+---
+
+## Lesson 4: CRUD Operations
+
+**CRUD** = Create, Read, Update, Delete
+
+> 🔗 [GitHub Repository with Examples](https://github.com/try-ronnie/python-p3-sql-crud)
+
+> ⚠️ **Remember:** All SQL commands must end with a semicolon (`;`)
+
+---
+
+### 1. CREATE - INSERT INTO
+
+Add new data to a table:
+
+```sql
+INSERT INTO cats (name, age, breed) VALUES ('Maru', 3, 'Scottish Fold');
 ```
-sqlite3 animals._database.db < add_colum.sql
+
+**Syntax:**
+```sql
+INSERT INTO [table_name] (column1, column2, ...) VALUES (value1, value2, ...);
 ```
-hence the file will get a new column according to the details passed in the file
 
+**Key Points:**
+- You don't need to specify the `id` column - it auto-increments
+- Column names go in the first parentheses
+- Values go in the second parentheses after `VALUES`
+- This works in both terminal and `.sql` files
 
-### LESSON 4 ; WHY DO DATA TYPES MATTER IN SQL
+---
 
-We've learned that when we create a table, we need to include a name for it as well as define at least one column. We define columns in a CREATE statement by including a name and a datatype to let SQLite know the kind of data we will be storing there. The practice of explicitly declaring a type is known as "typing."
+### 2. READ - SELECT FROM
 
-Why is it important that we use typing in our database? Simply put, typing allows us to exercise some level of control over our data. Typing not only informs our database of the kind of data we plan to store in a column, but it also restricts it. For instance, look at the age column below in our cats table. What do we mean by age? What if we had this:
+Retrieve data from a table.
 
+#### Basic Syntax
 
-name	  breed	                   age
-Maru	  Scottish Fold	            3
-Hannah	  Tabby	                    two
-Lil' Bub  American Shorthair	    5.5
+```sql
+SELECT [column_names] FROM [table_name];
+```
 
+#### Select Specific Columns
 
-Did we intend age to be represented as a whole number, a word, or a decimal? If we asked you to add up the ages of all the cats you could simply convert the 'two' to 2 in your head, but your database can't do that. It doesn't have that ability, because the logic involved in converting a word into a number would be dense and inefficient. What about different languages? What about different spellings? Capitalization, typos, or different hyphenation conventions? These are just some reasons this might start to get crazy. In other words, because databases are designed to store large amounts of data, they are very concerned with storing, accessing, and acting upon that data as efficiently and normally as possible.
+```sql
+SELECT name, age FROM cats;
+```
 
-Typing gives us the ability to perform all kinds of operations with predictable results. For instance, the ability to perform math operations like SUM — i.e. summing integers — doesn't just depend on everything being an integer of some sort but would also expect it. If you tried, for example, to SUM all of the cats in the above table, SQLite would actually attempt to convert, or cast, their type to something it can SUM. It would try to convert anything it can to an INTEGER and ignore alpha characters. This can lead to real problems. Without typing, our data might get complicated and messy, and it would be difficult to ask the database questions about large sets of data.]
+#### Select All Columns (Wildcard)
 
-#### DATATYPES 
-Different database systems also have different datatypes available, which are important and useful to know whenever you are dealing with those systems. SQLite is a good starting point to learn about datatypes because it only has five basic categories of datatypes; they are:
-> NULL In a database, NULL represents "no value", like null in JavaScript or None in Python.
->TEXT Any alphanumeric characters which we want to represent as plain text. The body of this paragraph is text. Your name is text. Your email address is a piece of text. Your height, weight, and age, however, are probably not.
->INTEGER  Anything we want to represent as a whole number. If it's a number and contains no letter or special characters or decimal points then we should store it as an integer. If we use it to perform math or create a comparison between two different rows in our database, then we definitely want to store it as an integer. If it's just a number, it's generally not a bad idea to store it as an integer. You might never add two house address numbers together, but you might want to sort them numerically. For example, in the preceding case you might want to get the biggest number and not the longest piece of text.
->REAL Anything that's a plain old decimal like 1.3 or 2.25. SQLite will store decimals up to 15 characters long. You can store 1.2345678912345 or 1234.5678912345, but 1.23456789123456789 would only store 1.2345678912345. In other database systems this is called 'double precision.'
+```sql
+SELECT * FROM cats;
+```
 
-With these three types in hand, we are going to be able to work our way through the next several topics, and this whole typing concept is going to quickly become second nature for you.
+The `*` wildcard means "all columns".
 
+---
 
->BLOBYou may encounter the BLOB datatype while you're Googling or doing any further reading on SQLite. For now, we will not use BLOB. It is generally used for holding binary data.
+### Using DISTINCT
 
-##### BONUS ON SQL LITE 
->increase its compatibility with other database engines (e.g. mySQL or PostgreSQL), SQLite allows the programmer to use other common datatypes outside of the four mentioned above. We can refer to TEXT INTEGER REAL BLOB as datatype "categories". All other common datatypes are lumped into one of the four existing datatypes recognized by SQLite.
->For example, INT is a common datatype used outside of SQLite. SQLite won't complain if you define a column as an INT datatype. It will simply lump it into the INTEGER category and store it as such.
->Boolean values are also stored as integers (0 for false, 1 for true).
->To accommodate this, SQLite has a pretty complicated system of categorizing datatypes that involves Storage Classes, Type Affinities, and Datatypes. For a deeper dive, check out the [documentation](http://www.sqlite.org/datatype3.)
+Remove duplicate rows from results:
 
-### LESSON 5 CRUD OPERATIOS IN SQL
-create, Read , update and delete actions in database
-
-
-this done in [github.repo](https://github.com/try-ronnie/python-p3-sql-crud#)
-
-these are the actions :
-    1. INSERT INTO 
-      ```INSERT INTO cats (name, age, breed) VALUES ('Maru', 3, 'Scottish Fold');```
-> We use the INSERT INTO command, followed by the name of the table to which we    want to add data. Then, in parentheses, we put the column names that we will be filling with data. This is followed by the VALUES keyword, which is accompanied by a parentheses
->Important: Note that we didn't specify the "id" column name or value. Since we created the cats table with an "id" column whose type is INTEGER PRIMARY KEY, we don't have to specify the id column values when we insert data. Primary Key columns are auto-incrementing. As long as you have defined an id column with a data type of INTEGER PRIMARY KEY, a newly inserted row's id column will be automatically given the correct value.
->THIS COMMAND CAN SRTILL BE USED IN FILE WITH SQL LANGUAGE
-
-
-> ### REMEMBER that for sql command we must end all of them with semicolons 
-    2. SELECT FROM :
-    ```SELECT [names of columns we are going to select] FROM [table we are selecting from]```
-    SELECT column FROM
-
-    We specify the names of the columns we want to SELECT and then tell SQL the table we want to select them FROM.
-
-We want to select all the rows in our table, and we want to return the data stored in any and all columns in those rows. To do this, we could pass the name of each column explicitly.
-
-For the rest of this code along, you can run the SQL commands one of two ways, depending on your preference.
-
-You can either open the database using the sqlite3 CLI, and run the SQL commands from the terminal:  sqlite3 pets_database.db
-
-Depending on which examples to use we can use this it it should return the respective columns the user had selected ... 
-A faster way to get data from every column in our table is to use a special selector, known commonly as the 'wildcard' selector *. The * selector means: "Give me all the data from all the columns for all of the cats" Using the wildcard, we can SELECT all the data from all of the columns in the cats table like this:
-```SELECT * FROM cats;```
-
->SELECT name, age FROM cats;
-Top-Tip: If you have duplicate data (for example, two cats with the same name) and you only want to select unique values, you can use the DISTINCT keyword. For example:
-
+```sql
 SELECT DISTINCT name FROM cats;
+```
 
+#### Example:
 
-so if we wrote 
+**Without DISTINCT:**
+```sql
 SELECT name FROM cats;
+```
+Result:
+```
+LUNA
+TEMBO
+LUNA
+GOMA
+```
 
-and it returned :  
-        LUNA 
-        TEMBO 
-        LUNA 
-        GOMA 
+**With DISTINCT:**
+```sql
+SELECT DISTINCT name FROM cats;
+```
+Result:
+```
+LUNA
+TEMBO
+GOMA
+```
 
-If we wanted no repetitive name sin our listings .... 
-SELECT DISTINCT name FROM cats ;
+#### DISTINCT with Multiple Columns
 
-hen the result would be :
-        LUNA 
-        TEMBI
-        GOMA
+```sql
+SELECT DISTINCT name, age FROM cats;
+```
 
-but if we used 
-SELECT DISTINCT name , age FROM cats ;
-      LUNA - 5 
-      TEMBO -3
-      GOMA -12
-      LUNA - 6
+Result:
+```
+LUNA  - 5
+TEMBO - 3
+GOMA  - 12
+LUNA  - 6
+```
 
-not that this time select doesnt remove 'LUNA' since both have different ages hence it differentiates them 
-but if the had the same age then they would both be removed and takenin as one since both are duplicates according to the colums that were selected 
-🎯 Key Rule
+Notice: Both "LUNA" entries remain because they have different ages.
 
-DISTINCT means:
+**🎯 Key Rule:**
 
-"Remove rows where all selected column values are exactly the same."
+DISTINCT removes rows where **ALL** selected column values are exactly the same.
 
 It does NOT:
+- Identify "original" rows
+- Compare IDs unless you select them
+- Know which record came first (unless you use `ORDER BY`)
 
-Identify “original” rows
+**🧩 Mental Model:**
 
-Compare IDs unless you select them
+Think of DISTINCT as putting results in a basket and saying: "If I already saw this exact combination before, don't show it again."
 
-Know which record came first (unless you use ORDER BY)
+---
 
-🧩 Simple Mental Model
+### Using WHERE Clause
 
-Think of DISTINCT like this:
+Filter results based on conditions:
 
-It puts the results in a basket and says:
+```sql
+SELECT * FROM [table_name] WHERE [column_name] = [value];
+```
 
-"If I already saw this exact value before, don’t show it again."
+#### Examples:
 
-That’s it.
+```sql
+-- Find a specific cat
+SELECT * FROM cats WHERE name = 'Maru';
 
-***Selecting Based on Conditions: The WHERE Clause***
-What happens when we want to retrieve a specific table row? For example the row that belongs to Maru? Or to retrieve all the baby cats who are younger than two years old? We can use the WHERE keyword to select data based on specific conditions. Here's an example of a boilerplate SELECT statement using a WHERE clause.
+-- Find young cats
+SELECT * FROM cats WHERE age < 2;
 
-its a conditional that only returns the values in the tbale that meet the requirement:
+-- Find cats of a specific breed
+SELECT * FROM cats WHERE breed = 'Scottish Fold';
+```
 
-``` SELECT * FROM [table name] WHERE [Column-anme]= [some value ];```
-meaning that every value from the column selected should be return only if they meet the condition (of some value)
-We can also use comparison operators, like < or > to select specific data. Let's give it a shot. Use the following statement to select the young cats:
+**Comparison Operators:**
+- `=` equal to
+- `<` less than
+- `>` greater than
+- `<=` less than or equal to
+- `>=` greater than or equal to
+- `!=` or `<>` not equal to
 
->***ALWAYS REMEMBER WHT FOLLOWS SELECT IS THE COLUMN TO BE RETRIEVED FOR CHECKING***
+> 💡 **Remember:** What follows `SELECT` is the column(s) to retrieve. The `WHERE` clause filters which rows to return.
 
+---
 
-3. UPDATE 
-a boiler plate update state ments looks like this
-```UPDATE [table name] SET [column name] = [new value] WHERE [column name] = [value];```
-The UPDATE statement uses a WHERE clause to grab the row you want to update. It identifies the table name you are looking in and resets the data in a particular column to a new value.
+### 3. UPDATE
 
-this isnt quite heavy , we just eed to know that ,
-we say UPDATE (table) and set the value you want to give 
-where the condtion is that in that column the value that we want to change
+Modify existing data in a table:
 
-update -> set new value  from the coum name -> where the column had the old value ;
+```sql
+UPDATE [table_name] SET [column_name] = [new_value] WHERE [column_name] = [value];
+```
 
-SO when we update We say :
-  1. which table (```UPDATE school```)
-  2.  set the column where the value whill be plced , so we have to name the column then value to be set i it (```SET name = "value"```)
-  3. then we introduce where ... cause ofc where the previous value was .... the column name and the value
-  (```WHERE name = "KAMOTHO```)
+#### Example:
 
+```sql
+UPDATE school SET name = 'John' WHERE name = 'KAMOTHO';
+```
 
+**Three Steps:**
+1. Specify which table: `UPDATE school`
+2. Set the new value: `SET name = 'John'`
+3. Identify which row(s): `WHERE name = 'KAMOTHO'`
 
+> ⚠️ **Warning:** Always use a `WHERE` clause! Without it, ALL rows will be updated.
 
-4. DELETE
-A boilerplate DELETE statement looks like this:
-``` DELETE FROM [table name] WJERE [column name] = [value]```
+---
 
-in the case of wanting to eliminate whitespaces in our table when getting the data or we maybe we want to get values but we cant since the user included white spaces 
+### 4. DELETE
 
-``` DELETE FROM shcool WHERE TRIM(name) = 'dj khalid'```
-this ensures athat we trima ny white spaces that come along 
+Remove rows from a table:
 
-💡 Tip: You can check if there are hidden spaces by doing
-SELECT '"' || name || '"' FROM school;
-It will wrap the name in quotes so you can see extra spaces clearly.
-1. TRIM / LTRIM / RTRIM
+```sql
+DELETE FROM [table_name] WHERE [column_name] = [value];
+```
 
-Purpose: Remove whitespace (or other characters) from strings.
+#### Example:
 
-Syntax:
+```sql
+DELETE FROM school WHERE name = 'dj khalid';
+```
 
+> ⚠️ **Warning:** Always use a `WHERE` clause! Without it, ALL rows will be deleted.
+
+---
+
+## Lesson 5: String Functions & Data Cleaning
+
+### SQLite Output Formatting
+
+Format your query results in the terminal:
+
+```bash
+.headers on       # Show column names
+.mode column      # Enable column mode
+.width auto       # Auto-adjust column width
+# or
+.width 10, 20     # Custom column widths
+```
+
+---
+
+### Common String Functions
+
+#### 1. TRIM / LTRIM / RTRIM
+
+Remove whitespace from strings:
+
+```sql
 TRIM(column)        -- removes spaces from both ends
-LTRIM(column)       -- removes spaces from the left/start
-RTRIM(column)       -- removes spaces from the right/end
+LTRIM(column)       -- removes spaces from the left
+RTRIM(column)       -- removes spaces from the right
+```
 
-
-Example:
-
+**Example:**
+```sql
 SELECT TRIM(name) FROM school;
 DELETE FROM school WHERE TRIM(name) = 'dj khalid';
+```
 
-2. UPPER / LOWER
+**💡 Tip:** Check for hidden spaces:
+```sql
+SELECT '"' || name || '"' FROM school;
+```
+This wraps names in quotes so you can see extra spaces.
 
-Purpose: Convert strings to uppercase or lowercase. Useful when your data has inconsistent casing.
+---
 
-Example:
+#### 2. UPPER / LOWER
 
+Convert strings to uppercase or lowercase:
+
+```sql
 SELECT * FROM school WHERE UPPER(name) = 'DJ KHALID';
 SELECT LOWER(name) FROM school;
+```
 
-3. LENGTH
+Useful for case-insensitive comparisons.
 
-Purpose: Count the number of characters in a string.
+---
 
-Example:
+#### 3. LENGTH
 
+Count characters in a string:
+
+```sql
 SELECT name, LENGTH(name) FROM school;
--- Can help find hidden trailing spaces
+```
 
-4. SUBSTR
+Helpful for finding trailing spaces or validating data.
 
-Purpose: Extract part of a string.
+---
 
-Syntax: SUBSTR(column, start, length)
+#### 4. SUBSTR
 
-Example:
+Extract part of a string:
 
+```sql
+SUBSTR(column, start, length)
+```
+
+**Example:**
+```sql
 SELECT SUBSTR(name, 1, 5) FROM school;
--- Will return first 5 characters
+-- Returns first 5 characters
+```
 
-5. REPLACE
+---
 
-Purpose: Replace all occurrences of a substring with another substring.
+#### 5. REPLACE
 
-Example:
+Replace all occurrences of a substring:
 
+```sql
 SELECT REPLACE(name, ' ', '') FROM school;
 -- Removes all spaces from names
+```
 
-6. LIKE / GLOB
+---
 
-Purpose: Pattern matching.
+#### 6. LIKE / GLOB
 
-Example:
+Pattern matching:
 
+```sql
 SELECT * FROM school WHERE name LIKE 'dj khalid%';
 -- % = any characters after "dj khalid"
+```
 
-Quick Combo for Cleaning Names
+**Wildcards:**
+- `%` - matches any sequence of characters
+- `_` - matches any single character
 
-If you want to delete rows ignoring extra spaces and case:
+**Examples:**
+```sql
+-- Names starting with 'A'
+SELECT * FROM cats WHERE name LIKE 'A%';
 
+-- Names ending with 'y'
+SELECT * FROM cats WHERE name LIKE '%y';
+
+-- Names with 'ar' anywhere
+SELECT * FROM cats WHERE name LIKE '%ar%';
+```
+
+---
+
+### Robust Data Cleaning Pattern
+
+Combine functions for bulletproof queries:
+
+```sql
 DELETE FROM school
 WHERE UPPER(TRIM(name)) = UPPER('dj khalid');
+```
+
+This pattern:
+- Removes leading/trailing spaces with `TRIM()`
+- Ignores case differences with `UPPER()`
+- Handles inconsistent user input
+
+**Use this approach when:**
+- User input might have extra spaces
+- Case sensitivity could cause issues
+- Data quality is inconsistent
+
+---
+
+## Quick Reference
+
+### Essential Commands
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `CREATE TABLE` | Create new table | `CREATE TABLE cats (id INTEGER PRIMARY KEY, name TEXT);` |
+| `ALTER TABLE` | Modify table structure | `ALTER TABLE cats ADD COLUMN breed TEXT;` |
+| `DROP TABLE` | Delete table | `DROP TABLE cats;` |
+| `INSERT INTO` | Add new data | `INSERT INTO cats (name, age) VALUES ('Maru', 3);` |
+| `SELECT` | Retrieve data | `SELECT * FROM cats;` |
+| `UPDATE` | Modify existing data | `UPDATE cats SET age = 4 WHERE name = 'Maru';` |
+| `DELETE` | Remove data | `DELETE FROM cats WHERE age > 10;` |
+
+### Data Types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `INTEGER` | Whole numbers | `42`, `1000` |
+| `TEXT` | Strings | `'Maru'`, `'Scottish Fold'` |
+| `REAL` | Decimals | `3.14`, `2.5` |
+| `NULL` | No value | `NULL` |
+| `BLOB` | Binary data | (rarely used) |
+
+### String Functions
+
+| Function | Purpose | Example |
+|----------|---------|---------|
+| `TRIM()` | Remove spaces | `TRIM(name)` |
+| `UPPER()` | Convert to uppercase | `UPPER(name)` |
+| `LOWER()` | Convert to lowercase | `LOWER(name)` |
+| `LENGTH()` | Count characters | `LENGTH(name)` |
+| `SUBSTR()` | Extract substring | `SUBSTR(name, 1, 5)` |
+| `REPLACE()` | Replace text | `REPLACE(name, ' ', '')` |
+
+---
+
+## Best Practices
+
+1. ✅ Always use `INTEGER PRIMARY KEY` for id columns
+2. ✅ End all SQL commands with semicolons (`;`)
+3. ✅ Use `WHERE` clauses with `UPDATE` and `DELETE` to avoid affecting all rows
+4. ✅ Use `DISTINCT` to remove duplicate results
+5. ✅ Use `TRIM()` and `UPPER()`/`LOWER()` for robust string comparisons
+6. ✅ Write SQL in `.sql` files for reusability
+7. ✅ Use meaningful table and column names
+8. ✅ Choose appropriate data types for your data
+
+---
+
+## Additional Resources
+
+- [SQLite Official Documentation](https://www.sqlite.org/docs.html)
+- [SQLite Data Types](http://www.sqlite.org/datatype3.html)
+- [SQL CRUD Operations GitHub Repo](https://github.com/try-ronnie/python-p3-sql-crud)
 
 
-This is a robust pattern because it ignores hidden spaces and casing issues.
+## LESSON 6 : QUERY MANIPULATORS
+
+1. order by
+The first query modifier we'll explore is ORDER BY. This modifier allows us to order the table rows returned by a certain SELECT statement. Here's a boilerplate SELECT statement that uses ORDER BY:
+```SELECT column_name FROM table_name ORDER BY column_name ASC|DESC;```
+
+ORDER BY justs lets us rearrange thedata according to ascending or descending order .....
+```SELECT * FROM cats ORDER BY age DESC;```
+This should return
+
+id          name        age         breed       owner_id
+----------  ----------  ----------  ----------  ----------
+4           Moe         10          Tabby
+3           Lil\' Bub   5           American S
+1           Maru        3           Scottish F  1
+5           Patches     2           Calico
+2           Hana        1           Tabby       1
+
+2. limits:
+What if we want the oldest cat? If we want to select extremes from a database table — for example, the employee with the highest paycheck or the patient with the most recent appointment — we can use ORDER BY in conjunction with LIMIT.
+
+LIMIT is used to determine the number of records you want to return from a dataset. For example:
+
+```SELECT * FROM school ORDER BY age LIMIT 1;```
+This part of the statement: SELECT * FROM cats ORDER BY age DESC returns all of the cats in order from oldest to youngest. Setting a LIMIT of 1 returns just the first, i.e. oldest, cat on the list.
+
+this means by the order of age .... limit is one record so it well retain the methods
+```SELECT * FROM cats ORDER BY age DESC LIMIT 2;```
+
+3. betwee
+As we've already established, being able to sort and select specific data sets is important. Continuing on with our example, let's say we urgently need to select all of the cats whose age is between 1 and 3. To create such a query, we can use BETWEEN. Here's a boilerplate SELECT statement using BETWEEN:
+```SELECT column_name(s) FROM table_name WHERE column_name BETWEEN value1 AND value2;```
+
+example used i our school.database.db
+```sqlite> 
+sqlite> SELECT * FROM school WHERE age BETWEEN 10 AND 20;
+|dj khalid |13|east|45000
+| KAMOTHO |12|EAST|75000
+| kinuthia |12|EAST |23000
+|scott|12|EAST|12000
+|KAMAU|16|WEST|142000
+```
+4. NULL 
+Let's say the administrator of our school.Database has found a new student. This student doesn't have a name yet, but should be added to our database right away. We can add data with missing values using the NULL keyword.
+
+Let's insert our new student into the database. Our abandoned student has a stream, but no name or age as of yet:
+
+INSERT INTO cats (name, age, breed) VALUES (NULL, NULL, "Tabby");
+
+``` INSERT INTO cats (name, age, breed) VALUES (NULL, NULL, "Tabby");
+```
+
+this should return something of the sort
+
+5. count
+
+
+SQL aggregate functions are SQL statements that operate on groups of records in our database rather than individual records. For example, we can retrieve minimum and maximum values from a column, sum values in a column, get the average of a column's values, or count a number of records that meet certain conditions. You can learn more about these SQL aggregators [here](https://www.sqlclauses.com/sql+aggregate+functions) and  [here](https://zetcode.com/db/sqlite/select/)
+
+
+```SELECT COUNT([column name]) FROM [table name] WHERE [column name] = [value]
+```
+```SELECT COUNT(owner_id) FROM cats WHERE owner_id = 1;```
+
+5. Group by
+Lastly, we'll talk about the handy aggregate function GROUP BY. Like its name suggests, it groups your results by a given column.
+
+```SELECT breed, COUNT(breed) FROM cats GROUP BY breed;
+```
+This should return
+
+breed               COUNT(breed)
+------------------  ------------
+American Shorthair  1
+Calico              1
+Scottish Fold       1
+Tabby               3
+
+
+Note on SELECT
+We are now familiar with this syntax:
+
+SELECT name FROM cats;
+However, you may not know that this can be written like this as well:
+
+SELECT cats.name FROM cats;
+Both return:
+
+name
+----------
+Maru
+Hana
+Lil\' Bub
+Moe
+Patches
+SQLite allows us to explicitly state the tableName.columnName we want to select. This is particularly useful when we want data from two different tables.
+
+Imagine we have another table called dogs with a column for the dog names:
+
+CREATE TABLE dogs (
+  id INTEGER PRIMARY KEY,
+  name TEXT
+);
+INSERT INTO dogs (name) VALUES ("Clifford");
+If we want to get the names of all the dogs and cats, we can no longer run a query with just the column name. SELECT name FROM cats,dogs; will return Error: ambiguous column name: name.
+
+Instead, we must explicitly follow the tableName.columnName syntax.
+
+SELECT cats.name, dogs.name FROM cats, dogs;
+You may see this in the future. Don't let it trip you up.
+
+Conclusion
+SQL gives you a lot of tools for fine-grained control over how to view data from various database tables. When you start working with larger databases that have 5000 or 50,000 rows in a table instead of 5, having this level of control is crucial for accessing and analyzing data that's useful to your applications, and can help you improve your application's performance significantly by limiting the amount of data being returned.
+
+
+
+
