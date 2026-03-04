@@ -17,6 +17,7 @@ select_all_bears_names_and_ages_that_are_alive_and_order_youngest_to_oldest = ""
     SELECT 
         bears.name
         bears.age
+    FROM bears
     WHERE alive = 1 
     ORDER BY age
 """
@@ -25,6 +26,7 @@ select_oldest_bear_and_returns_name_and_age = """
     SELECT
         bears.name
         bears.age
+    FROM bears
     WHERE age 
 """
 select_youngest_bear_and_returns_name_and_age = """
