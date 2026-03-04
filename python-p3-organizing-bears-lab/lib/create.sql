@@ -1,13 +1,13 @@
 CREATE TABLE bears(
-id PRIMARY KEY INTERGER,
+id INTEGER PRIMARY KEY,
 name TEXT , 
 age INTEGER,
 sex TEXT, 
 color TEXT,
 temperament TEXT , 
-alive BOOLEAN NOT NULL CHECK(alive IN (0,1));
+alive BOOLEAN NOT NULL CHECK(alive IN (0,1)));
 
--- 🎯 So Why Use Both?
+/*-- 🎯 So Why Use Both?
 
 -- Because:
 -- BOOLEAN = meaning + type behavior
@@ -18,8 +18,8 @@ alive BOOLEAN NOT NULL CHECK(alive IN (0,1));
 -- CHECK (alive IN (0,1))
 -- Because it already enforces true/false.
 -- That CHECK is mostly used when the DB doesn’t truly enforce boolean.
--- 🧠 Backend Dev Level Insight
+-- 🧠 Backend Dev Level Insight 
 -- You just stumbled onto something important:
 -- Database types are not just about storage —
 -- they’re about data meaning and system behavior.
--- That’s how senior engineers think.
+-- That’s how senior engineers think. */
