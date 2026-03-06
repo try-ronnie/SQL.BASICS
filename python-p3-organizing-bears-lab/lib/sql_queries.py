@@ -27,12 +27,14 @@ select_oldest_bear_and_returns_name_and_age = """
         bears.name,
         bears.age
     FROM bears
-    WHERE age = (SELECT MAX(age) FROM bears);
+    WHERE age = (SELECT MAX(age) FROM bears)
+    LIMIT 1;
 """
 select_youngest_bear_and_returns_name_and_age = """
     SELECT
-        bears.name
+        bears.name,
         bears.age
     FROM bears 
-    WHERE age = (SELECT MIN(age)FROM bears)
+    WHERE age = (SELECT MIN(age) FROM bears);
+
 """

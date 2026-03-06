@@ -18,8 +18,4 @@ alive BOOLEAN NOT NULL CHECK(alive IN (0,1)));
 -- CHECK (alive IN (0,1))
 -- Because it already enforces true/false.
 -- That CHECK is mostly used when the DB doesn’t truly enforce boolean.
--- 🧠 Backend Dev Level Insight 
--- You just stumbled onto something important:
--- Database types are not just about storage —
--- they’re about data meaning and system behavior.
--- That’s how senior engineers think. */
+*/
