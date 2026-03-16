@@ -1,0 +1,1 @@
+INSERT INTO cats (name , age , breed) VALUES ('Maru ', 3, 'Scottih Fold') , ('Hana' , 1 , 'Tabby') , ('Nona', 4 , 'Tortoiseshell') , ('Lil'' Bub' , 2, 'perma-kitten')

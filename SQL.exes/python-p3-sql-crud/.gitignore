@@ -31,27 +31,3 @@ jspm_packages
 
 # Learn-specific .results.json
 .results.json
-
-# Ignore bundler config.
-/.bundle
-
-# Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
-
-# Ignore all logfiles and tempfiles.
-/log/*
-!/log/.keep
-/tmp
-
-# Virtual env metadata
-.venv
-
-# pytest cache
-.pytest_cache
-
-# pycache
-lib/__pycache
-
-# checkpoints
-testing/.ipynb_checkpoints

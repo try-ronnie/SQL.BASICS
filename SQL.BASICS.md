@@ -758,4 +758,9 @@ select_all_female_bears_return_name_and_age = """
 """
 You may be expected to use SQL statements that you're not particularly familiar with. Make sure you use the resources and Google to find the right statements.
 
+### SQL JOINS
+left join:
 
+inner join 
+
+right inner join 
