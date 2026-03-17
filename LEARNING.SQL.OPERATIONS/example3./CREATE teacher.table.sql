@@ -1,0 +1,4 @@
+CREATE TABLE teacher (
+id INTEGER PRIMARY KEY ,
+name TEXT NOT NULL , 
+age INTEGER CHECK (age > 25 AND age < 40);

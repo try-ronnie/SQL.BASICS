@@ -1,0 +1,1 @@
+INSERT INTO teacher (name , age) VALUES ('Albert Byrone' , 35) , ('Rose Oketch' , 39 ) , ('Tight ass' , 26) , ('Hamida Mustafa', 33) ;
