@@ -1,0 +1,1 @@
+INSERT INTO teacher (name , age ,gender) VALUES ('Kamotho' , 45 , 'M') , ('Kinuthia' , 46 , 'M') , ('Muthoni' , 55 , 'F') , ('Rachel', 35 , 'F')
