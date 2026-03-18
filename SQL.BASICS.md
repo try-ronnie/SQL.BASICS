@@ -1419,6 +1419,8 @@ INNER JOIN teacher ON students.id = teacher.id;
 
 Always use `table.column` notation in JOIN queries to avoid ambiguity errors.
 
+> **Tip:** Even when it's not strictly required (e.g., only one table has a column named `name`), using `table.column` notation makes your queries self-documenting — anyone reading the query immediately knows which table each column comes from.
+
 ---
 
 ### 12. Visual Summary — Which JOIN to Use?
