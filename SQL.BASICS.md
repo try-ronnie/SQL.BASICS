@@ -1100,7 +1100,7 @@ FULL OUTER JOIN table2
 ON table1.shared_column = table2.shared_column;
 ```
 
-> **SQLite note:** SQLite does not support FULL OUTER JOIN directly. You simulate it using `LEFT JOIN` combined with `UNION` and another `LEFT JOIN` with tables swapped.
+> **SQLite note:** SQLite does not support FULL OUTER JOIN directly. You simulate it using `LEFT JOIN` combined with `UNION` and another `LEFT JOIN` with tables swapped. The `UNION` keyword merges the two result sets and removes duplicate rows automatically.
 
 **SQLite simulation:**
 
