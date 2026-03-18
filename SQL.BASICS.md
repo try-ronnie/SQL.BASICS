@@ -1202,7 +1202,7 @@ dogo      Kinuthia
 
 A SELF JOIN is when a table is joined **to itself**. This sounds strange at first, but it's useful when rows in a table have a relationship with other rows in the same table.
 
-To do a self join, you use table aliases — you give the same table two different names so SQL can tell them apart.
+To do a self join, you use table aliases — you give the same table two different names so SQL can tell them apart. Without aliases, SQL wouldn't know which "students" you mean when you write `students.id = students.id`.
 
 **Syntax:**
 
