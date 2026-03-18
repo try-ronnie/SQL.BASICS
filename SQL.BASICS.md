@@ -1313,6 +1313,8 @@ INNER JOIN teacher AS t ON st.teacher_id = t.id;
 
 Both queries return the same result. The aliased version is easier to read and write, especially with 3+ table joins.
 
+> **Convention:** Single-letter aliases (`s`, `t`, `st`) are common for short queries. For complex queries with many tables, use more descriptive aliases like `stud`, `tchr` to keep things readable.
+
 ---
 
 ### 9. Joining More Than Two Tables
