@@ -1,0 +1,1 @@
+INSERT INTO students (name , age , gender) VALUES  ('bob' , 15 , 'M') , ('dogo' , 15 , 'F') , ('Tabitha', 17 , 'F'), ('Tindo' , 17 , 'M') , ('Matata' , 12 , 'M' ) , ('jamaml' , 15 , 'M') , ('Joe' , 11 , 'M') , ('George' , 14 , 'M'), ('rose' , 16, 'F') , ('Maria' , 17 , 'F') , ('Maggie' , 17 , 'F')
