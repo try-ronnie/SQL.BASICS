@@ -1156,6 +1156,8 @@ A CROSS JOIN returns the **Cartesian product** of two tables — every row from 
 
 If table A has 11 rows and table B has 4 rows, a CROSS JOIN gives you 11 × 4 = **44 rows**.
 
+The name "Cartesian product" comes from mathematics — it's the set of all ordered pairs from two sets. In SQL terms: every possible pairing.
+
 **Syntax:**
 
 ```sql
