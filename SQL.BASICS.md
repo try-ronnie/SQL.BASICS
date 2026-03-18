@@ -826,9 +826,11 @@ INSERT INTO students_teachers (student_id, teacher_id) VALUES
 So looking at the join table data:
 - Student 8 (George) is taught by Teacher 1 (Kamotho)
 - Student 9 (rose) is taught by Teacher 3 (Muthoni)
-- Student 10 (Maria) is taught by Teacher 2 (Kinuthia) AND Teacher 1 (Kamotho)
+- Student 10 (Maria) is taught by Teacher 2 (Kinuthia) AND Teacher 1 (Kamotho) — she has **two** teachers
 - Students 1–7 and 11 have **no teacher assigned** — they exist in the students table but have no row in students_teachers
-- Teachers 4 (Rachel) has **no students assigned** — she exists in the teacher table but has no row in students_teachers
+- Teacher 4 (Rachel) has **no students assigned** — she exists in the teacher table but has no row in students_teachers
+
+> This is intentional. Real databases always have gaps like this. Some students haven't been assigned yet. Some teachers are new. JOINs are how you decide what to do with those gaps.
 
 This is the exact setup that makes JOINs interesting. Keep this data in mind as we go through each join type — you'll see how each one handles these gaps differently.
 
