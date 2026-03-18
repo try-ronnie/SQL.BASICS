@@ -1043,7 +1043,7 @@ RIGHT JOIN table2
 ON table1.shared_column = table2.shared_column;
 ```
 
-> **SQLite note:** SQLite does not natively support RIGHT JOIN. You can achieve the same result by swapping the table order and using a LEFT JOIN instead.
+> **SQLite note:** SQLite does not natively support RIGHT JOIN. You can achieve the same result by swapping the table order and using a LEFT JOIN instead. This is not a limitation in practice — every RIGHT JOIN can be rewritten as a LEFT JOIN by putting the "right" table first.
 
 **Example** — get all teachers and their students (if they have any):
 
