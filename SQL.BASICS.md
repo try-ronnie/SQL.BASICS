@@ -1024,7 +1024,9 @@ Joe      7
 Maggie   11
 ```
 
-This is a very common pattern — LEFT JOIN + `WHERE right_table.column IS NULL` to find records that have **no relationship**.
+This is a very common pattern — LEFT JOIN + `WHERE right_table.column IS NULL` to find records that have **no relationship**. It's sometimes called an **anti-join** or **exclusion join**.
+
+The logic: after the LEFT JOIN, any student with no match in `students_teachers` will have `NULL` in the `students_teachers.student_id` column. Filtering for `IS NULL` gives you exactly those students.
 
 ---
 
