@@ -955,7 +955,7 @@ That's INNER JOIN: **strict, no gaps, only confirmed matches**.
 
 A LEFT JOIN returns **all rows from the left table**, and the matched rows from the right table. If a row in the left table has no match in the right table, it still appears in the result — but the columns from the right table will be `NULL`.
 
-Think of it as: *"Give me everything from the left, and attach whatever you can find from the right."*
+Think of it as: *"Give me everything from the left, and attach whatever you can find from the right. If you can't find anything, just leave it blank (NULL)."*
 
 **Syntax:**
 
