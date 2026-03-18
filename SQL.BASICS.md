@@ -1192,6 +1192,7 @@ dogo      Kinuthia
 - Generating all possible combinations (e.g., scheduling, seating arrangements)
 - Creating test data
 - Building a matrix of options (sizes × colors, students × subjects)
+- Generating a calendar grid (days × time slots)
 
 > ⚠️ **Warning:** CROSS JOIN on large tables can produce enormous result sets. 1000 rows × 1000 rows = 1,000,000 rows. Use with care.
 
