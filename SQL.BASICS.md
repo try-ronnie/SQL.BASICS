@@ -1089,7 +1089,7 @@ Rachel appears even though she has no students — her `student_name` is `NULL`.
 
 A FULL OUTER JOIN returns **all rows from both tables**. Where there's a match, the columns are filled in. Where there's no match on either side, `NULL` fills the gaps.
 
-Think of it as LEFT JOIN + RIGHT JOIN combined — you get everything, matched or not.
+Think of it as LEFT JOIN + RIGHT JOIN combined — you get everything, matched or not. In a Venn diagram, this is the entire circle — both sides plus the overlap.
 
 **Syntax:**
 
