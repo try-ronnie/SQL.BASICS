@@ -1371,6 +1371,8 @@ Rachel    0
 
 Rachel shows up with 0 because we used LEFT JOIN — she has no students but we still want her in the result. If we used INNER JOIN, Rachel would be excluded entirely.
 
+> **Rule of thumb:** When combining JOINs with `COUNT` or other aggregates, use LEFT JOIN if you want zero-count rows to appear. Use INNER JOIN if you only care about rows with actual data.
+
 **Example** — count how many teachers each student has:
 
 ```sql
