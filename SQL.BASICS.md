@@ -1341,6 +1341,8 @@ rose     Muthoni   F
 
 Only rose is taught by a female teacher (Muthoni). Maria's teachers are Kamotho and Kinuthia — both male — so she doesn't appear.
 
+> **Reading multi-table JOINs:** Read them top to bottom. Start with `FROM` (your base table), then each `JOIN` adds another table, and `WHERE` filters the combined result. The `ON` clause on each JOIN line is what links that table to the previous ones.
+
 ---
 
 ### 10. JOIN with Aggregate Functions
