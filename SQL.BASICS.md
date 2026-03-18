@@ -883,7 +883,7 @@ SQLite supports INNER JOIN, LEFT JOIN, CROSS JOIN, and SELF JOIN natively. RIGHT
 
 An INNER JOIN returns only the rows where there is a **matching value in both tables**. If a row in the left table has no match in the right table (or vice versa), it is completely excluded from the result.
 
-Think of it as the **intersection** — only what both tables agree on.
+Think of it as the **intersection** — only what both tables agree on. Like a Venn diagram where you only care about the overlapping middle part.
 
 **Syntax:**
 
