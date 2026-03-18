@@ -1432,15 +1432,17 @@ Always use `table.column` notation in JOIN queries to avoid ambiguity errors.
   bob      (1)                                        Kamotho  (1)
   dogo     (2)                                        Kinuthia (2)
   Tabitha  (3)                                        Muthoni  (3)
-  Tindo    (4)                                        Rachel   (4)
+  Tindo    (4)                                        Rachel   (4)  <-- no students
   Matata   (5)
   jamaml   (6)            (8,1)  (9,3)
   Joe      (7)            (10,2) (10,1)
-  George   (8) ---------->
-  rose     (9) ---------->
-  Maria    (10) --------->
-  Maggie   (11)
+  George   (8) ----------> matched
+  rose     (9) ----------> matched
+  Maria    (10) ----------> matched (twice)
+  Maggie   (11)           <-- no teacher
 ```
+
+Rows 1-7 and 11 in students have no match in students_teachers. Rachel (teacher 4) has no match either. Each JOIN type handles these differently:
 
 | Question | JOIN to use |
 |---|---|
