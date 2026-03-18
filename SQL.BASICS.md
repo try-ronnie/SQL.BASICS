@@ -10,6 +10,8 @@
 - [Lesson 3: Data Types in SQL](#lesson-3-data-types-in-sql)
 - [Lesson 4: CRUD Operations](#lesson-4-crud-operations)
 - [Lesson 5: String Functions & Data Cleaning](#lesson-5-string-functions--data-cleaning)
+- [Lesson 6: Query Manipulators](#lesson-6--query-manipulators)
+- [Lesson 7: SQL Joins](#lesson-7-sql-joins)
 
 ---
 
