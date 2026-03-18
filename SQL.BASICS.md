@@ -866,14 +866,14 @@ That's 3 separate queries. JOINs collapse all of that into one.
 
 Here are all the JOIN types we'll cover:
 
-| JOIN Type | What it returns |
-|---|---|
-| `INNER JOIN` | Only rows with a match in BOTH tables |
-| `LEFT JOIN` | All rows from the left table + matched rows from the right |
-| `RIGHT JOIN` | All rows from the right table + matched rows from the left |
-| `FULL OUTER JOIN` | All rows from both tables, matched where possible |
-| `CROSS JOIN` | Every combination of rows from both tables |
-| `SELF JOIN` | A table joined to itself |
+| JOIN Type | What it returns | Includes unmatched left? | Includes unmatched right? |
+|---|---|---|---|
+| `INNER JOIN` | Only rows with a match in BOTH tables | No | No |
+| `LEFT JOIN` | All rows from the left table + matched rows from the right | Yes | No |
+| `RIGHT JOIN` | All rows from the right table + matched rows from the left | No | Yes |
+| `FULL OUTER JOIN` | All rows from both tables, matched where possible | Yes | Yes |
+| `CROSS JOIN` | Every combination of rows from both tables | N/A | N/A |
+| `SELF JOIN` | A table joined to itself | Depends on join type used | Depends on join type used |
 
 SQLite supports INNER JOIN, LEFT JOIN, CROSS JOIN, and SELF JOIN natively. RIGHT JOIN and FULL OUTER JOIN can be simulated using LEFT JOIN with table order swapped or UNION.
 
