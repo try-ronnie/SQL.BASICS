@@ -842,7 +842,23 @@ Imagine you want to answer: *"What are the names of the students taught by Kamot
 
 The `students` table has names. The `teacher` table has Kamotho. The `students_teachers` table connects them. No single table has all the information — you need to JOIN them.
 
-Without JOINs, you'd have to run multiple queries and manually match the results. JOINs let the database do that matching for you in one clean query.
+Without JOINs, you'd have to run multiple queries and manually match the results in your head or in code:
+
+```sql
+-- Step 1: find Kamotho's id
+SELECT id FROM teacher WHERE name = 'Kamotho';
+-- returns: 1
+
+-- Step 2: find student_ids linked to teacher 1
+SELECT student_id FROM students_teachers WHERE teacher_id = 1;
+-- returns: 8, 10
+
+-- Step 3: find names for those student ids
+SELECT name FROM students WHERE id IN (8, 10);
+-- returns: George, Maria
+```
+
+That's 3 separate queries. JOINs collapse all of that into one.
 
 ---
 
