@@ -947,6 +947,8 @@ Notice: bob, dogo, Tabitha, Tindo, Matata, jamaml, Joe, Maggie — all excluded.
 
 That's INNER JOIN: **strict, no gaps, only confirmed matches**.
 
+> **Key rule:** If either side of the ON condition is NULL or has no match, that row is dropped entirely. INNER JOIN is the most restrictive join — it only keeps rows that exist in both tables.
+
 ---
 
 ### 2. LEFT JOIN (also called LEFT OUTER JOIN)
