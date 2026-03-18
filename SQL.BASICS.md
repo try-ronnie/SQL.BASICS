@@ -1146,6 +1146,7 @@ Every student and every teacher appears. Unmatched students get `NULL` for teach
 - Auditing — find all unmatched records on both sides at once
 - Data reconciliation between two datasets
 - Merging two tables where either side may have records the other doesn't
+- Reporting dashboards where you need to show all entities regardless of activity
 
 ---
 
