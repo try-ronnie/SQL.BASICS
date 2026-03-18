@@ -13,7 +13,7 @@
 
 ---
 
-## Lesson 1: Basic SQL Commands
+## 🗄️ Lesson 1: Basic SQL Commands
 
 SQL is a language used to maintain relational databases.
 
@@ -39,8 +39,11 @@ CREATE TABLE cats (
 );
 ```
 
-**Key Points:**
+**Key Points:** 🚀
 - `CREATE TABLE` command creates a new table
+- Column names followed by data types (e.g., `TEXT`, `INTEGER`)
+- Always include `id INTEGER PRIMARY KEY` (auto-increments from 1)
+- Keywords in UPPERCASE by convention (case-insensitive)
 - Column names are followed by their data type (TEXT, INTEGER, etc.)
 - Every table should have an `id INTEGER PRIMARY KEY` column
 - Primary keys are unique and auto-incrementing (start at 1)
@@ -60,7 +63,7 @@ Check your table structure:
 .schema
 ```
 
-**Note:** Altering or deleting columns in SQLite3 can be tricky and requires workarounds.
+**💡 SQLite Tip:** Altering/dropping columns is limited; use `CREATE TABLE AS SELECT` for complex changes.
 
 ### Dropping a Table
 
@@ -78,32 +81,24 @@ Exit SQLite:
 
 ---
 
-## Lesson 2: Writing SQL in a Text Editor
+## ✏️ Lesson 2: Writing SQL in a Text Editor
 
 Instead of typing commands directly in the terminal, you can write SQL in `.sql` files and execute them.
 
-### Workflow
+### 📝 Workflow
 
-1. **Create a file** with `.sql` extension (e.g., `add_column.sql`)
-
-2. **Write your SQL command:**
+1. **Create** `.sql` file (e.g., `add_column.sql`)
+2. **Write** SQL:
    ```sql
    ALTER TABLE animals ADD COLUMN price INTEGER;
    ```
+3. **Run**: `sqlite3 animals_database.db < add_column.sql`
 
-3. **Execute the file** against your database:
-   ```bash
-   sqlite3 animals_database.db < add_column.sql
-   ```
-
-This approach helps you:
-- Keep track of your SQL code
-- Reuse commands easily
-- Maintain version control
+**Benefits:** Version control, reusability, easier debugging. 🛠️
 
 ---
 
-## Lesson 3: Data Types in SQL
+## 🔤 Lesson 3: Data Types in SQL
 
 ### Why Data Types Matter
 
@@ -115,11 +110,11 @@ Typing allows databases to:
 
 **Example Problem:**
 
-| name     | breed              | age |
-|----------|-------------------|-----|
-| Maru     | Scottish Fold     | 3   |
-| Hannah   | Tabby             | two |
-| Lil' Bub | American Shorthair| 5.5 |
+| name       | breed              | age |
+|------------|-------------------|-----|
+| Maru       | Scottish Fold     | 3   |
+| Hannah     | Tabby             | two |
+| Lil' Bub   | American Shorthair| 5.5 |
 
 Without proper typing, operations like `SUM(age)` become unpredictable.
 
@@ -159,11 +154,11 @@ SQLite accepts common datatypes from other databases (MySQL, PostgreSQL):
 - `BOOLEAN` → stored as `INTEGER` (0 = false, 1 = true)
 - `VARCHAR` → stored as `TEXT`
 
-For more details, see the [SQLite documentation](http://www.sqlite.org/datatype3.html).
+**More:** [SQLite Datatypes](https://www.sqlite.org/datatype3.html)
 
 ---
 
-## Lesson 4: CRUD Operations
+## ➕➡️📖✏️🗑️ Lesson 4: CRUD Operations
 
 **CRUD** = Create, Read, Update, Delete
 
@@ -328,7 +323,7 @@ UPDATE [table_name] SET [column_name] = [new_value] WHERE [column_name] = [value
 #### Example:
 
 ```sql
-UPDATE school SET name = 'John' WHERE name = 'KAMOTHO';
+UPDATE school SET name = 'John' WHERE UPPER(TRIM(name)) = 'KAMOTHO';
 ```
 
 **Three Steps:**
@@ -351,14 +346,14 @@ DELETE FROM [table_name] WHERE [column_name] = [value];
 #### Example:
 
 ```sql
-DELETE FROM school WHERE name = 'dj khalid';
+DELETE FROM school WHERE UPPER(TRIM(name)) = 'DJ KHALID';
 ```
 
 > ⚠️ **Warning:** Always use a `WHERE` clause! Without it, ALL rows will be deleted.
 
 ---
 
-## Lesson 5: String Functions & Data Cleaning
+## ✂️ Lesson 5: String Functions & Data Cleaning
 
 ### SQLite Output Formatting
 
@@ -389,7 +384,7 @@ RTRIM(column)       -- removes spaces from the right
 **Example:**
 ```sql
 SELECT TRIM(name) FROM school;
-DELETE FROM school WHERE TRIM(name) = 'dj khalid';
+DELETE FROM school WHERE TRIM(name) = 'DJ KHALID';
 ```
 
 **💡 Tip:** Check for hidden spaces:
@@ -405,7 +400,7 @@ This wraps names in quotes so you can see extra spaces.
 Convert strings to uppercase or lowercase:
 
 ```sql
-SELECT * FROM school WHERE UPPER(name) = 'DJ KHALID';
+SELECT * FROM school WHERE UPPER(TRIM(name)) = 'DJ KHALID';
 SELECT LOWER(name) FROM school;
 ```
 
@@ -457,7 +452,7 @@ SELECT REPLACE(name, ' ', '') FROM school;
 Pattern matching:
 
 ```sql
-SELECT * FROM school WHERE name LIKE 'dj khalid%';
+SELECT * FROM school WHERE name LIKE 'DJ KHALID%';
 -- % = any characters after "dj khalid"
 ```
 
@@ -485,7 +480,7 @@ Combine functions for bulletproof queries:
 
 ```sql
 DELETE FROM school
-WHERE UPPER(TRIM(name)) = UPPER('dj khalid');
+WHERE UPPER(TRIM(name)) = 'DJ KHALID';
 ```
 
 This pattern:
@@ -557,7 +552,7 @@ This pattern:
 - [SQL CRUD Operations GitHub Repo](https://github.com/try-ronnie/python-p3-sql-crud)
 
 
-## LESSON 6 : QUERY MANIPULATORS
+
 
 1. order by
 The first query modifier we'll explore is ORDER BY. This modifier allows us to order the table rows returned by a certain SELECT statement. Here's a boilerplate SELECT statement that uses ORDER BY:
@@ -649,6 +644,7 @@ name
 ----------
 Maru
 Hana
+| `AVG(column)` | Average |
 Lil\' Bub
 Moe
 Patches
@@ -1253,6 +1249,7 @@ LEFT JOIN employees AS m ON e.manager_id = m.id;
 - Hierarchical data (employees and their managers, categories and subcategories)
 - Finding duplicate or related records within the same table
 - Comparing rows within the same table
+- Finding students/employees/items that share a common attribute (same age, same department, same price)
 
 ---
 
@@ -1489,4 +1486,5 @@ WHERE a.id < b.id;
 5. ✅ Combine JOINs with `WHERE`, `GROUP BY`, and aggregate functions for powerful queries
 6. ✅ Be careful with CROSS JOIN on large tables — the result set grows fast
 7. ✅ In SQLite, simulate RIGHT JOIN by swapping table order with LEFT JOIN
+8. ✅ In SQLite, simulate FULL OUTER JOIN using `LEFT JOIN ... UNION ... LEFT JOIN`
 8. ✅ In SQLite, simulate FULL OUTER JOIN using `LEFT JOIN ... UNION ... LEFT JOIN`
