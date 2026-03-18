@@ -758,9 +758,708 @@ select_all_female_bears_return_name_and_age = """
 """
 You may be expected to use SQL statements that you're not particularly familiar with. Make sure you use the resources and Google to find the right statements.
 
-### SQL JOINS
-left join:
+---
 
-inner join 
+## Lesson 7: SQL JOINS
 
-right inner join 
+So far you've been working with one table at a time. But real databases are made of **multiple related tables** — and that's where JOINs come in.
+
+A JOIN lets you pull data from two or more tables in a single query, by linking them through a shared column — usually a foreign key.
+
+Before we dive in, let's look at the tables we'll be using throughout this lesson. These come straight from your `example 4` folder.
+
+### The Tables We're Working With
+
+**students table** — created in `CREATE students.table.sql`:
+
+```sql
+CREATE TABLE students(
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER NOT NULL CHECK (age > 10 AND age < 18),
+  gender TEXT NOT NULL CHECK (gender IN ('M', 'F'))
+);
+```
+
+**teacher table** — created in `CREATE teacher.table.sql`:
+
+```sql
+CREATE TABLE teacher(
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER NOT NULL CHECK (age > 25 AND age < 65),
+  gender TEXT NOT NULL CHECK (gender IN ('M', 'F'))
+);
+```
+
+**students_teachers (join table)** — created in `CREATE join_table.sql`:
+
+```sql
+CREATE TABLE students_teachers(
+  student_id INTEGER NOT NULL,
+  teacher_id INTEGER NOT NULL
+);
+```
+
+This middle table is called a **join table** (also known as a bridge table or associative table). It doesn't hold names or ages — it just holds relationships. It says: "student with id X is linked to teacher with id Y."
+
+**Data inserted** — from `INSERT students_values.sql`, `INSERT teacher_values.sql`, `INSERT join_table_data.sql`:
+
+```sql
+-- students
+INSERT INTO students (name, age, gender) VALUES
+  ('bob', 15, 'M'), ('dogo', 15, 'F'), ('Tabitha', 17, 'F'),
+  ('Tindo', 17, 'M'), ('Matata', 12, 'M'), ('jamaml', 15, 'M'),
+  ('Joe', 11, 'M'), ('George', 14, 'M'), ('rose', 16, 'F'),
+  ('Maria', 17, 'F'), ('Maggie', 17, 'F');
+
+-- teachers
+INSERT INTO teacher (name, age, gender) VALUES
+  ('Kamotho', 45, 'M'), ('Kinuthia', 46, 'M'),
+  ('Muthoni', 55, 'F'), ('Rachel', 35, 'F');
+
+-- relationships (who teaches who)
+INSERT INTO students_teachers (student_id, teacher_id) VALUES
+  (8, 1), (9, 3), (10, 2), (10, 1);
+```
+
+So looking at the join table data:
+- Student 8 (George) is taught by Teacher 1 (Kamotho)
+- Student 9 (rose) is taught by Teacher 3 (Muthoni)
+- Student 10 (Maria) is taught by Teacher 2 (Kinuthia) AND Teacher 1 (Kamotho)
+- Students 1–7 and 11 have **no teacher assigned** — they exist in the students table but have no row in students_teachers
+- Teachers 4 (Rachel) has **no students assigned** — she exists in the teacher table but has no row in students_teachers
+
+This is the exact setup that makes JOINs interesting. Keep this data in mind as we go through each join type — you'll see how each one handles these gaps differently.
+
+---
+
+### Why JOINs Exist
+
+Imagine you want to answer: *"What are the names of the students taught by Kamotho?"*
+
+The `students` table has names. The `teacher` table has Kamotho. The `students_teachers` table connects them. No single table has all the information — you need to JOIN them.
+
+Without JOINs, you'd have to run multiple queries and manually match the results. JOINs let the database do that matching for you in one clean query.
+
+---
+
+### The JOIN Family — Overview
+
+Here are all the JOIN types we'll cover:
+
+| JOIN Type | What it returns |
+|---|---|
+| `INNER JOIN` | Only rows with a match in BOTH tables |
+| `LEFT JOIN` | All rows from the left table + matched rows from the right |
+| `RIGHT JOIN` | All rows from the right table + matched rows from the left |
+| `FULL OUTER JOIN` | All rows from both tables, matched where possible |
+| `CROSS JOIN` | Every combination of rows from both tables |
+| `SELF JOIN` | A table joined to itself |
+
+SQLite supports INNER JOIN, LEFT JOIN, CROSS JOIN, and SELF JOIN natively. RIGHT JOIN and FULL OUTER JOIN can be simulated using LEFT JOIN with table order swapped or UNION.
+
+---
+
+### 1. INNER JOIN
+
+An INNER JOIN returns only the rows where there is a **matching value in both tables**. If a row in the left table has no match in the right table (or vice versa), it is completely excluded from the result.
+
+Think of it as the **intersection** — only what both tables agree on.
+
+**Syntax:**
+
+```sql
+SELECT table1.column, table2.column
+FROM table1
+INNER JOIN table2
+ON table1.shared_column = table2.shared_column;
+```
+
+**Your example** — from `SELECT student_of_tch3.sql`:
+
+```sql
+SELECT students.name, students.id
+FROM students
+INNER JOIN students_teachers
+ON students.id = students_teachers.student_id
+WHERE students_teachers.teacher_id = 1;
+```
+
+Let's break this down line by line:
+
+- `SELECT students.name, students.id` — we want the student's name and id
+- `FROM students` — start from the students table (this is the **left** table)
+- `INNER JOIN students_teachers` — join it with the students_teachers table (the **right** table)
+- `ON students.id = students_teachers.student_id` — the link: match rows where the student's id equals the student_id in the join table
+- `WHERE students_teachers.teacher_id = 1` — filter: only keep rows where the teacher is Kamotho (id = 1)
+
+**Result:**
+
+```
+name    id
+------  --
+George  8
+Maria   10
+```
+
+Only George (id 8) and Maria (id 10) have a row in `students_teachers` with `teacher_id = 1`. Everyone else is excluded — including students with no teacher at all.
+
+**Another example** — get all students and their teachers (no WHERE filter):
+
+```sql
+SELECT students.name, teacher.name
+FROM students
+INNER JOIN students_teachers ON students.id = students_teachers.student_id
+INNER JOIN teacher ON students_teachers.teacher_id = teacher.id;
+```
+
+Result:
+
+```
+students.name  teacher.name
+-------------  ------------
+George         Kamotho
+rose           Muthoni
+Maria          Kinuthia
+Maria          Kamotho
+```
+
+Notice: bob, dogo, Tabitha, Tindo, Matata, jamaml, Joe, Maggie — all excluded. They have no entry in `students_teachers`. Rachel (teacher) is also excluded — she has no students.
+
+That's INNER JOIN: **strict, no gaps, only confirmed matches**.
+
+---
+
+### 2. LEFT JOIN (also called LEFT OUTER JOIN)
+
+A LEFT JOIN returns **all rows from the left table**, and the matched rows from the right table. If a row in the left table has no match in the right table, it still appears in the result — but the columns from the right table will be `NULL`.
+
+Think of it as: *"Give me everything from the left, and attach whatever you can find from the right."*
+
+**Syntax:**
+
+```sql
+SELECT table1.column, table2.column
+FROM table1
+LEFT JOIN table2
+ON table1.shared_column = table2.shared_column;
+```
+
+**Example using your tables** — get all students and their teacher (if they have one):
+
+```sql
+SELECT students.name, students.id, teacher.name AS teacher_name
+FROM students
+LEFT JOIN students_teachers ON students.id = students_teachers.student_id
+LEFT JOIN teacher ON students_teachers.teacher_id = teacher.id;
+```
+
+Result:
+
+```
+name     id   teacher_name
+-------  ---  ------------
+bob      1    NULL
+dogo     2    NULL
+Tabitha  3    NULL
+Tindo    4    NULL
+Matata   5    NULL
+jamaml   6    NULL
+Joe      7    NULL
+George   8    Kamotho
+rose     9    Muthoni
+Maria    10   Kinuthia
+Maria    10   Kamotho
+Maggie   11   NULL
+```
+
+Every student shows up. The ones with no teacher get `NULL` in the `teacher_name` column. Maria appears twice because she has two teachers.
+
+**When to use LEFT JOIN:**
+- When you want to see all records from one table regardless of whether they have a match
+- When you want to find records with **no match** (unassigned students, orphaned records, etc.)
+
+**Finding students with NO teacher assigned:**
+
+```sql
+SELECT students.name, students.id
+FROM students
+LEFT JOIN students_teachers ON students.id = students_teachers.student_id
+WHERE students_teachers.student_id IS NULL;
+```
+
+Result:
+
+```
+name     id
+-------  --
+bob      1
+dogo     2
+Tabitha  3
+Tindo    4
+Matata   5
+jamaml   6
+Joe      7
+Maggie   11
+```
+
+This is a very common pattern — LEFT JOIN + `WHERE right_table.column IS NULL` to find records that have **no relationship**.
+
+---
+
+### 3. RIGHT JOIN (also called RIGHT OUTER JOIN)
+
+A RIGHT JOIN is the mirror image of a LEFT JOIN. It returns **all rows from the right table**, and the matched rows from the left table. If a row in the right table has no match in the left table, it still appears — with `NULL` for the left table's columns.
+
+**Syntax:**
+
+```sql
+SELECT table1.column, table2.column
+FROM table1
+RIGHT JOIN table2
+ON table1.shared_column = table2.shared_column;
+```
+
+> **SQLite note:** SQLite does not natively support RIGHT JOIN. You can achieve the same result by swapping the table order and using a LEFT JOIN instead.
+
+**Example** — get all teachers and their students (if they have any):
+
+```sql
+-- Standard SQL (works in MySQL, PostgreSQL)
+SELECT students.name AS student_name, teacher.name AS teacher_name
+FROM students_teachers
+RIGHT JOIN teacher ON students_teachers.teacher_id = teacher.id
+LEFT JOIN students ON students_teachers.student_id = students.id;
+```
+
+**SQLite equivalent** (swap tables, use LEFT JOIN):
+
+```sql
+SELECT students.name AS student_name, teacher.name AS teacher_name
+FROM teacher
+LEFT JOIN students_teachers ON teacher.id = students_teachers.teacher_id
+LEFT JOIN students ON students_teachers.student_id = students.id;
+```
+
+Result:
+
+```
+student_name  teacher_name
+------------  ------------
+George        Kamotho
+Maria         Kamotho
+rose          Muthoni
+Maria         Kinuthia
+NULL          Rachel
+```
+
+Rachel appears even though she has no students — her `student_name` is `NULL`. That's the RIGHT JOIN behaviour: the right table (teacher) is fully preserved.
+
+**When to use RIGHT JOIN:**
+- When you want all records from the right table regardless of matches
+- Finding teachers with no students, products with no orders, categories with no items, etc.
+
+---
+
+### 4. FULL OUTER JOIN
+
+A FULL OUTER JOIN returns **all rows from both tables**. Where there's a match, the columns are filled in. Where there's no match on either side, `NULL` fills the gaps.
+
+Think of it as LEFT JOIN + RIGHT JOIN combined — you get everything, matched or not.
+
+**Syntax:**
+
+```sql
+SELECT table1.column, table2.column
+FROM table1
+FULL OUTER JOIN table2
+ON table1.shared_column = table2.shared_column;
+```
+
+> **SQLite note:** SQLite does not support FULL OUTER JOIN directly. You simulate it using `LEFT JOIN` combined with `UNION` and another `LEFT JOIN` with tables swapped.
+
+**SQLite simulation:**
+
+```sql
+-- All students with their teachers (LEFT side)
+SELECT students.name AS student_name, teacher.name AS teacher_name
+FROM students
+LEFT JOIN students_teachers ON students.id = students_teachers.student_id
+LEFT JOIN teacher ON students_teachers.teacher_id = teacher.id
+
+UNION
+
+-- All teachers with their students (RIGHT side — catches unmatched teachers)
+SELECT students.name AS student_name, teacher.name AS teacher_name
+FROM teacher
+LEFT JOIN students_teachers ON teacher.id = students_teachers.teacher_id
+LEFT JOIN students ON students_teachers.student_id = students.id;
+```
+
+Result:
+
+```
+student_name  teacher_name
+------------  ------------
+bob           NULL
+dogo          NULL
+Tabitha       NULL
+Tindo         NULL
+Matata        NULL
+jamaml        NULL
+Joe           NULL
+George        Kamotho
+rose          Muthoni
+Maria         Kinuthia
+Maria         Kamotho
+Maggie        NULL
+NULL          Rachel
+```
+
+Every student and every teacher appears. Unmatched students get `NULL` for teacher. Rachel (unmatched teacher) gets `NULL` for student.
+
+**When to use FULL OUTER JOIN:**
+- Auditing — find all unmatched records on both sides at once
+- Data reconciliation between two datasets
+- Merging two tables where either side may have records the other doesn't
+
+---
+
+### 5. CROSS JOIN
+
+A CROSS JOIN returns the **Cartesian product** of two tables — every row from the left table is combined with every row from the right table. No `ON` condition is needed because you're not matching anything — you're combining everything.
+
+If table A has 11 rows and table B has 4 rows, a CROSS JOIN gives you 11 × 4 = **44 rows**.
+
+**Syntax:**
+
+```sql
+SELECT table1.column, table2.column
+FROM table1
+CROSS JOIN table2;
+```
+
+**Example** — pair every student with every teacher:
+
+```sql
+SELECT students.name AS student, teacher.name AS teacher
+FROM students
+CROSS JOIN teacher;
+```
+
+This gives you 11 students × 4 teachers = **44 rows**. Every possible student-teacher pairing.
+
+```
+student   teacher
+--------  --------
+bob       Kamotho
+bob       Kinuthia
+bob       Muthoni
+bob       Rachel
+dogo      Kamotho
+dogo      Kinuthia
+... (44 rows total)
+```
+
+**When to use CROSS JOIN:**
+- Generating all possible combinations (e.g., scheduling, seating arrangements)
+- Creating test data
+- Building a matrix of options (sizes × colors, students × subjects)
+
+> ⚠️ **Warning:** CROSS JOIN on large tables can produce enormous result sets. 1000 rows × 1000 rows = 1,000,000 rows. Use with care.
+
+---
+
+### 6. SELF JOIN
+
+A SELF JOIN is when a table is joined **to itself**. This sounds strange at first, but it's useful when rows in a table have a relationship with other rows in the same table.
+
+To do a self join, you use table aliases — you give the same table two different names so SQL can tell them apart.
+
+**Syntax:**
+
+```sql
+SELECT a.column, b.column
+FROM table_name AS a
+INNER JOIN table_name AS b
+ON a.shared_column = b.related_column;
+```
+
+**Example** — find all pairs of students who are the same age:
+
+```sql
+SELECT a.name AS student1, b.name AS student2, a.age
+FROM students AS a
+INNER JOIN students AS b
+ON a.age = b.age
+WHERE a.id < b.id;
+```
+
+The `WHERE a.id < b.id` prevents duplicates — without it you'd get (bob, dogo) AND (dogo, bob), plus each student paired with themselves.
+
+Result (partial):
+
+```
+student1  student2  age
+--------  --------  ---
+bob       dogo      15
+bob       jamaml    15
+dogo      jamaml    15
+Tabitha   Tindo     17
+Tabitha   Maria     17
+Tabitha   Maggie    17
+Tindo     Maria     17
+Tindo     Maggie    17
+Maria     Maggie    17
+```
+
+**Another real-world use case** — imagine a table of employees where each row has a `manager_id` that references another employee's `id` in the same table:
+
+```sql
+SELECT e.name AS employee, m.name AS manager
+FROM employees AS e
+LEFT JOIN employees AS m ON e.manager_id = m.id;
+```
+
+**When to use SELF JOIN:**
+- Hierarchical data (employees and their managers, categories and subcategories)
+- Finding duplicate or related records within the same table
+- Comparing rows within the same table
+
+---
+
+### 7. The JOIN Table Pattern (Many-to-Many Relationships)
+
+Your `students_teachers` table is a perfect example of a **join table** — the standard way to model a many-to-many relationship in SQL.
+
+The relationship here is: one student can have many teachers, and one teacher can have many students. You can't store that in just two tables without repeating data. The join table solves this cleanly.
+
+Here's the same pattern from your `python-p3-creating-join-tables` folder:
+
+```sql
+-- from create_join_table.sql
+CREATE TABLE cat_owners(
+  cat_id INTEGER,
+  owner_id INTEGER
+);
+```
+
+And the query to find the owner of cat 3:
+
+```sql
+-- from SELECT owners_name of cat 3.sql
+SELECT owner.name
+FROM owner
+INNER JOIN cat_owners
+ON owner.id = cat_owners.owner_id
+WHERE cat_owners.cat_id = 3;
+```
+
+Same pattern as your school database — just cats and owners instead of students and teachers. The logic is identical:
+1. Start from the table you want data from (`owner`)
+2. JOIN through the join table (`cat_owners`)
+3. Filter by the id you're looking for (`cat_id = 3`)
+
+---
+
+### 8. Using Table Aliases in JOINs
+
+As your queries get longer, typing full table names repeatedly gets tedious. SQL lets you use **aliases** — short nicknames for tables — using the `AS` keyword (or just a space).
+
+```sql
+-- Without aliases
+SELECT students.name, teacher.name
+FROM students
+INNER JOIN students_teachers ON students.id = students_teachers.student_id
+INNER JOIN teacher ON students_teachers.teacher_id = teacher.id;
+
+-- With aliases (much cleaner)
+SELECT s.name AS student_name, t.name AS teacher_name
+FROM students AS s
+INNER JOIN students_teachers AS st ON s.id = st.student_id
+INNER JOIN teacher AS t ON st.teacher_id = t.id;
+```
+
+Both queries return the same result. The aliased version is easier to read and write, especially with 3+ table joins.
+
+---
+
+### 9. Joining More Than Two Tables
+
+You're not limited to two tables. You can chain as many JOINs as you need. Each JOIN adds another table to the query.
+
+**Example** — get student names, their teacher names, and filter to only female teachers:
+
+```sql
+SELECT s.name AS student, t.name AS teacher, t.gender
+FROM students AS s
+INNER JOIN students_teachers AS st ON s.id = st.student_id
+INNER JOIN teacher AS t ON st.teacher_id = t.id
+WHERE t.gender = 'F';
+```
+
+Result:
+
+```
+student  teacher   gender
+-------  -------   ------
+rose     Muthoni   F
+```
+
+Only rose is taught by a female teacher (Muthoni). Maria's teachers are Kamotho and Kinuthia — both male — so she doesn't appear.
+
+---
+
+### 10. JOIN with Aggregate Functions
+
+You can combine JOINs with aggregate functions like `COUNT`, `GROUP BY`, etc.
+
+**Example** — count how many students each teacher has:
+
+```sql
+SELECT t.name AS teacher, COUNT(st.student_id) AS student_count
+FROM teacher AS t
+LEFT JOIN students_teachers AS st ON t.id = st.teacher_id
+GROUP BY t.id, t.name;
+```
+
+Result:
+
+```
+teacher   student_count
+--------  -------------
+Kamotho   2
+Kinuthia  1
+Muthoni   1
+Rachel    0
+```
+
+Rachel shows up with 0 because we used LEFT JOIN — she has no students but we still want her in the result. If we used INNER JOIN, Rachel would be excluded entirely.
+
+**Example** — count how many teachers each student has:
+
+```sql
+SELECT s.name AS student, COUNT(st.teacher_id) AS teacher_count
+FROM students AS s
+LEFT JOIN students_teachers AS st ON s.id = st.student_id
+GROUP BY s.id, s.name;
+```
+
+Result:
+
+```
+student   teacher_count
+--------  -------------
+bob       0
+dogo      0
+Tabitha   0
+Tindo     0
+Matata    0
+jamaml    0
+Joe       0
+George    1
+rose      1
+Maria     2
+Maggie    0
+```
+
+---
+
+### 11. The `tableName.columnName` Notation
+
+You already saw this in Lesson 6 — but it becomes **essential** in JOINs. When two tables have a column with the same name (like both having an `id` column), SQL needs you to be explicit about which one you mean.
+
+```sql
+-- This is ambiguous and will cause an error:
+SELECT id, name FROM students INNER JOIN teacher ON students.id = teacher.id;
+-- Error: ambiguous column name: id
+
+-- This is explicit and correct:
+SELECT students.id, students.name, teacher.name
+FROM students
+INNER JOIN teacher ON students.id = teacher.id;
+```
+
+Always use `table.column` notation in JOIN queries to avoid ambiguity errors.
+
+---
+
+### 12. Visual Summary — Which JOIN to Use?
+
+```
+  students table          students_teachers          teacher table
+  (11 rows)               (4 rows)                   (4 rows)
+
+  bob      (1)                                        Kamotho  (1)
+  dogo     (2)                                        Kinuthia (2)
+  Tabitha  (3)                                        Muthoni  (3)
+  Tindo    (4)                                        Rachel   (4)
+  Matata   (5)
+  jamaml   (6)            (8,1)  (9,3)
+  Joe      (7)            (10,2) (10,1)
+  George   (8) ---------->
+  rose     (9) ---------->
+  Maria    (10) --------->
+  Maggie   (11)
+```
+
+| Question | JOIN to use |
+|---|---|
+| Only students who have a teacher? | `INNER JOIN` |
+| All students, show teacher if they have one | `LEFT JOIN` (students on left) |
+| All teachers, show students if they have any | `LEFT JOIN` (teacher on left) or `RIGHT JOIN` |
+| All students AND all teachers, matched where possible | `FULL OUTER JOIN` (or UNION in SQLite) |
+| Every possible student-teacher pairing | `CROSS JOIN` |
+| Students who share the same age | `SELF JOIN` |
+
+---
+
+### Quick Reference — JOIN Syntax
+
+```sql
+-- INNER JOIN
+SELECT s.name, t.name
+FROM students s
+INNER JOIN students_teachers st ON s.id = st.student_id
+INNER JOIN teacher t ON st.teacher_id = t.id;
+
+-- LEFT JOIN
+SELECT s.name, t.name
+FROM students s
+LEFT JOIN students_teachers st ON s.id = st.student_id
+LEFT JOIN teacher t ON st.teacher_id = t.id;
+
+-- FULL OUTER JOIN (SQLite simulation)
+SELECT s.name, t.name FROM students s
+LEFT JOIN students_teachers st ON s.id = st.student_id
+LEFT JOIN teacher t ON st.teacher_id = t.id
+UNION
+SELECT s.name, t.name FROM teacher t
+LEFT JOIN students_teachers st ON t.id = st.teacher_id
+LEFT JOIN students s ON st.student_id = s.id;
+
+-- CROSS JOIN
+SELECT s.name, t.name
+FROM students s
+CROSS JOIN teacher t;
+
+-- SELF JOIN
+SELECT a.name, b.name
+FROM students a
+INNER JOIN students b ON a.age = b.age
+WHERE a.id < b.id;
+```
+
+---
+
+### Best Practices for JOINs
+
+1. ✅ Always use `table.column` notation to avoid ambiguity
+2. ✅ Use aliases (`AS s`, `AS t`) to keep long queries readable
+3. ✅ Choose LEFT JOIN over INNER JOIN when you need to preserve unmatched rows
+4. ✅ Use a join table for many-to-many relationships
+5. ✅ Combine JOINs with `WHERE`, `GROUP BY`, and aggregate functions for powerful queries
+6. ✅ Be careful with CROSS JOIN on large tables — the result set grows fast
+7. ✅ In SQLite, simulate RIGHT JOIN by swapping table order with LEFT JOIN
+8. ✅ In SQLite, simulate FULL OUTER JOIN using `LEFT JOIN ... UNION ... LEFT JOIN`
