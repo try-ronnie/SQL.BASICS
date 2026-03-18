@@ -1289,6 +1289,8 @@ Same pattern as your school database — just cats and owners instead of student
 2. JOIN through the join table (`cat_owners`)
 3. Filter by the id you're looking for (`cat_id = 3`)
 
+This 3-step mental model works for any many-to-many JOIN query you'll ever write.
+
 ---
 
 ### 8. Using Table Aliases in JOINs
