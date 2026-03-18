@@ -1081,6 +1081,7 @@ Rachel appears even though she has no students — her `student_name` is `NULL`.
 **When to use RIGHT JOIN:**
 - When you want all records from the right table regardless of matches
 - Finding teachers with no students, products with no orders, categories with no items, etc.
+- In practice, most developers just flip the table order and use LEFT JOIN — same result, more widely supported
 
 ---
 
