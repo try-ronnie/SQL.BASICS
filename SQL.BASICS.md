@@ -1223,7 +1223,7 @@ ON a.age = b.age
 WHERE a.id < b.id;
 ```
 
-The `WHERE a.id < b.id` prevents duplicates — without it you'd get (bob, dogo) AND (dogo, bob), plus each student paired with themselves.
+The `WHERE a.id < b.id` prevents duplicates — without it you'd get (bob, dogo) AND (dogo, bob), plus each student paired with themselves. The `<` ensures each pair only appears once, and a student is never paired with themselves.
 
 Result (partial):
 
