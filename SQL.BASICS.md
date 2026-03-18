@@ -1259,6 +1259,10 @@ Your `students_teachers` table is a perfect example of a **join table** — the 
 
 The relationship here is: one student can have many teachers, and one teacher can have many students. You can't store that in just two tables without repeating data. The join table solves this cleanly.
 
+**Why not just add a `teacher_id` column to the students table?**
+
+Because Maria has TWO teachers. If you added `teacher_id` to the students table, you'd need two rows for Maria — duplicating her name, age, and gender. That's messy and inconsistent. The join table keeps each entity in one place and only stores the relationship separately.
+
 Here's the same pattern from your `python-p3-creating-join-tables` folder:
 
 ```sql
