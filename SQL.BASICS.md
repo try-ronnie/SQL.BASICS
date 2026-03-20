@@ -590,7 +590,19 @@ id   name       age   breed               owner_id
 
 The cats are now sorted from oldest to youngest. Flip `DESC` to `ASC` and you get youngest to oldest.
 
-2. limits:
+**ORDER BY multiple columns:**
+
+You can sort by more than one column. The second column is used as a tiebreaker when the first column has equal values.
+
+```sql
+SELECT * FROM students ORDER BY age DESC, name ASC;
+```
+
+This sorts students by age descending, and for students with the same age, sorts them alphabetically by name.
+
+---
+
+### 2. LIMIT
 What if we want the oldest cat? If we want to select extremes from a database table — for example, the employee with the highest paycheck or the patient with the most recent appointment — we can use ORDER BY in conjunction with LIMIT.
 
 LIMIT is used to determine the number of records you want to return from a dataset. For example:
