@@ -846,6 +846,19 @@ SELECT cats.name, dogs.name FROM cats, dogs;
 
 You'll use this constantly in JOINs — covered in Lesson 7.
 
+**Quick reference — Lesson 6 modifiers:**
+
+| Modifier | Purpose | Example |
+|---|---|---|
+| `ORDER BY` | Sort results | `ORDER BY age DESC` |
+| `LIMIT` | Cap number of rows | `LIMIT 5` |
+| `OFFSET` | Skip rows | `LIMIT 5 OFFSET 10` |
+| `BETWEEN` | Range filter | `WHERE age BETWEEN 10 AND 20` |
+| `IS NULL` | Check for missing value | `WHERE name IS NULL` |
+| `COUNT()` | Count rows | `SELECT COUNT(*) FROM cats` |
+| `GROUP BY` | Group rows | `GROUP BY breed` |
+| `HAVING` | Filter groups | `HAVING COUNT(breed) > 1` |
+
 ---
 
 #### Exercise: Organizing Bears Lab
