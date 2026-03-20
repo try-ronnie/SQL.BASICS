@@ -1660,17 +1660,23 @@ Rows 1-7 and 11 in students have no match in students_teachers. Rachel (teacher 
 ### Quick Reference — JOIN Syntax
 
 ```sql
--- INNER JOIN
+-- INNER JOIN: only matched rows
 SELECT s.name, t.name
 FROM students s
 INNER JOIN students_teachers st ON s.id = st.student_id
 INNER JOIN teacher t ON st.teacher_id = t.id;
 
--- LEFT JOIN
+-- LEFT JOIN: all students, teacher if assigned
 SELECT s.name, t.name
 FROM students s
 LEFT JOIN students_teachers st ON s.id = st.student_id
 LEFT JOIN teacher t ON st.teacher_id = t.id;
+
+-- Anti-join: students with NO teacher
+SELECT s.name
+FROM students s
+LEFT JOIN students_teachers st ON s.id = st.student_id
+WHERE st.student_id IS NULL;
 
 -- FULL OUTER JOIN (SQLite simulation)
 SELECT s.name, t.name FROM students s
@@ -1681,12 +1687,12 @@ SELECT s.name, t.name FROM teacher t
 LEFT JOIN students_teachers st ON t.id = st.teacher_id
 LEFT JOIN students s ON st.student_id = s.id;
 
--- CROSS JOIN
+-- CROSS JOIN: every student-teacher combination
 SELECT s.name, t.name
 FROM students s
 CROSS JOIN teacher t;
 
--- SELF JOIN
+-- SELF JOIN: students who share the same age
 SELECT a.name, b.name
 FROM students a
 INNER JOIN students b ON a.age = b.age
