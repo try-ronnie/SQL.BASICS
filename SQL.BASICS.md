@@ -959,6 +959,8 @@ CREATE TABLE students_teachers(
 
 This middle table is called a **join table** (also known as a bridge table or associative table). It doesn't hold names or ages — it just holds relationships. It says: "student with id X is linked to teacher with id Y."
 
+Notice there is no `id` column in `students_teachers`. That's intentional — the combination of `student_id` and `teacher_id` together identifies each relationship. You could add a primary key if needed, but for a simple join table it's not required.
+
 **Data inserted** — from `INSERT students_values.sql`, `INSERT teacher_values.sql`, `INSERT join_table_data.sql`:
 
 ```sql
