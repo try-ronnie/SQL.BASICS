@@ -1167,6 +1167,7 @@ Every student shows up. The ones with no teacher get `NULL` in the `teacher_name
 **When to use LEFT JOIN:**
 - When you want to see all records from one table regardless of whether they have a match
 - When you want to find records with **no match** (unassigned students, orphaned records, etc.)
+- When you're building reports and need every entity to appear even if they have zero activity
 
 **Finding students with NO teacher assigned:**
 
