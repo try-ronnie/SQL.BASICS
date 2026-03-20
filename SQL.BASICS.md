@@ -556,6 +556,9 @@ This pattern:
 - [SQLite Official Documentation](https://www.sqlite.org/docs.html)
 - [SQLite Data Types](http://www.sqlite.org/datatype3.html)
 - [SQL CRUD Operations GitHub Repo](https://github.com/try-ronnie/python-p3-sql-crud)
+- [SQL Aggregate Functions](https://www.sqlclauses.com/sql+aggregate+functions)
+- [SQLite SELECT deep dive](https://zetcode.com/db/sqlite/select/)
+- [SQL JOIN visualizer](https://joins.spathon.com/)
 
 ---
 
