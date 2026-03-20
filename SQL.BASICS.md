@@ -1247,6 +1247,17 @@ NULL          Rachel
 
 Rachel appears even though she has no students — her `student_name` is `NULL`. That's the RIGHT JOIN behaviour: the right table (teacher) is fully preserved.
 
+**Finding teachers with NO students (anti-join from the right side):**
+
+```sql
+SELECT teacher.name
+FROM teacher
+LEFT JOIN students_teachers ON teacher.id = students_teachers.teacher_id
+WHERE students_teachers.teacher_id IS NULL;
+```
+
+Result: `Rachel` — the only teacher with no students assigned.
+
 **When to use RIGHT JOIN:**
 - When you want all records from the right table regardless of matches
 - Finding teachers with no students, products with no orders, categories with no items, etc.
