@@ -553,24 +553,42 @@ This pattern:
 - [SQLite Data Types](http://www.sqlite.org/datatype3.html)
 - [SQL CRUD Operations GitHub Repo](https://github.com/try-ronnie/python-p3-sql-crud)
 
+---
 
+## Lesson 6: Query Manipulators
 
+### 1. ORDER BY
 
-1. order by
-The first query modifier we'll explore is ORDER BY. This modifier allows us to order the table rows returned by a certain SELECT statement. Here's a boilerplate SELECT statement that uses ORDER BY:
-```SELECT column_name FROM table_name ORDER BY column_name ASC|DESC;```
+The first query modifier we'll explore is `ORDER BY`. It lets you sort the rows returned by a `SELECT` statement in either ascending or descending order.
 
-ORDER BY justs lets us rearrange thedata according to ascending or descending order .....
-```SELECT * FROM cats ORDER BY age DESC;```
-This should return
+**Syntax:**
 
-id          name        age         breed       owner_id
-----------  ----------  ----------  ----------  ----------
-4           Moe         10          Tabby
-3           Lil\' Bub   5           American S
-1           Maru        3           Scottish F  1
-5           Patches     2           Calico
-2           Hana        1           Tabby       1
+```sql
+SELECT column_name FROM table_name ORDER BY column_name ASC|DESC;
+```
+
+- `ASC` — ascending order (smallest to largest, A to Z). This is the default if you don't specify.
+- `DESC` — descending order (largest to smallest, Z to A).
+
+**Example:**
+
+```sql
+SELECT * FROM cats ORDER BY age DESC;
+```
+
+Result:
+
+```
+id   name       age   breed               owner_id
+---  ---------  ---   ------------------  --------
+4    Moe        10    Tabby
+3    Lil' Bub   5     American Shorthair
+1    Maru       3     Scottish Fold       1
+5    Patches    2     Calico
+2    Hana       1     Tabby               1
+```
+
+The cats are now sorted from oldest to youngest. Flip `DESC` to `ASC` and you get youngest to oldest.
 
 2. limits:
 What if we want the oldest cat? If we want to select extremes from a database table — for example, the employee with the highest paycheck or the patient with the most recent appointment — we can use ORDER BY in conjunction with LIMIT.
