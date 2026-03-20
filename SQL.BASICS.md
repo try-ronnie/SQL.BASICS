@@ -918,7 +918,9 @@ The test database uses an in-memory SQLite database (`sqlite3.connect(":memory:"
 
 So far you've been working with one table at a time. But real databases are made of **multiple related tables** — and that's where JOINs come in.
 
-A JOIN lets you pull data from two or more tables in a single query, by linking them through a shared column — usually a foreign key.
+A JOIN lets you pull data from two or more tables in a single query, by linking them through a shared column — usually a **foreign key**.
+
+A **foreign key** is a column in one table that references the primary key of another table. In your school database, `students_teachers.student_id` is a foreign key that references `students.id`. That link is what makes the JOIN possible.
 
 Before we dive in, let's look at the tables we'll be using throughout this lesson. These come straight from your `example 4` folder.
 
