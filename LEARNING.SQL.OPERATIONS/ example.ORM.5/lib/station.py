@@ -33,3 +33,11 @@ class Station:
     # Escapes everything properly
 
     # we use self.name to refer to the individual  value of the object
+
+    def create_save (cls , name ,capacity,location):
+        '''Create an instance of station and persist it to the table directly'''
+        department = cls(name,capacity,location)
+        department.save()
+        return department
+    
+
