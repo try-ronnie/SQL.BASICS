@@ -720,6 +720,14 @@ SELECT * FROM cats WHERE name IS NOT NULL;
 
 > `WHERE name = NULL` will never return any rows — NULL is not equal to anything, not even itself. Always use `IS NULL`.
 
+**Updating NULL values:**
+
+```sql
+UPDATE cats SET name = 'Unknown' WHERE name IS NULL;
+```
+
+This finds all cats with no name and sets them to `'Unknown'`.
+
 ---
 
 ### 5. COUNT and Aggregate Functions
