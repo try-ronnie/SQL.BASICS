@@ -819,6 +819,8 @@ HAVING total > 1;
 
 Only returns breeds that have more than 1 cat. `HAVING` is to `GROUP BY` what `WHERE` is to `SELECT`.
 
+> **Order of clauses matters:** `SELECT` → `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `ORDER BY` → `LIMIT`. You can't use `HAVING` before `GROUP BY` or `WHERE` after `HAVING`.
+
 ---
 
 ### 7. The `tableName.columnName` Notation
