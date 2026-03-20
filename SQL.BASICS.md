@@ -559,7 +559,7 @@ This pattern:
 
 ### 1. ORDER BY
 
-The first query modifier we'll explore is `ORDER BY`. It lets you sort the rows returned by a `SELECT` statement in either ascending or descending order.
+`ORDER BY` lets you sort the rows returned by a `SELECT` statement in ascending or descending order.
 
 **Syntax:**
 
@@ -567,8 +567,8 @@ The first query modifier we'll explore is `ORDER BY`. It lets you sort the rows 
 SELECT column_name FROM table_name ORDER BY column_name ASC|DESC;
 ```
 
-- `ASC` — ascending order (smallest to largest, A to Z). This is the default if you don't specify.
-- `DESC` — descending order (largest to smallest, Z to A).
+- `ASC` — ascending (smallest to largest, A to Z). Default if not specified.
+- `DESC` — descending (largest to smallest, Z to A).
 
 **Example:**
 
@@ -588,203 +588,286 @@ id   name       age   breed               owner_id
 2    Hana       1     Tabby               1
 ```
 
-The cats are now sorted from oldest to youngest. Flip `DESC` to `ASC` and you get youngest to oldest.
+The cats are sorted oldest to youngest. Swap `DESC` for `ASC` and you get youngest to oldest.
 
 **ORDER BY multiple columns:**
 
-You can sort by more than one column. The second column is used as a tiebreaker when the first column has equal values.
+The second column acts as a tiebreaker when the first has equal values.
 
 ```sql
 SELECT * FROM students ORDER BY age DESC, name ASC;
 ```
 
-This sorts students by age descending, and for students with the same age, sorts them alphabetically by name.
+Sorts students by age descending; students with the same age are then sorted alphabetically by name.
 
 ---
 
 ### 2. LIMIT
-What if we want the oldest cat? If we want to select extremes from a database table — for example, the employee with the highest paycheck or the patient with the most recent appointment — we can use ORDER BY in conjunction with LIMIT.
 
-LIMIT is used to determine the number of records you want to return from a dataset. For example:
+`LIMIT` controls how many rows are returned. Most useful paired with `ORDER BY` to get the top or bottom N records.
 
-```SELECT * FROM school ORDER BY age LIMIT 1;```
-This part of the statement: SELECT * FROM cats ORDER BY age DESC returns all of the cats in order from oldest to youngest. Setting a LIMIT of 1 returns just the first, i.e. oldest, cat on the list.
+**Syntax:**
 
-this means by the order of age .... limit is one record so it well retain the methods
-```SELECT * FROM cats ORDER BY age DESC LIMIT 2;```
-
-3. betwee
-As we've already established, being able to sort and select specific data sets is important. Continuing on with our example, let's say we urgently need to select all of the cats whose age is between 1 and 3. To create such a query, we can use BETWEEN. Here's a boilerplate SELECT statement using BETWEEN:
-```SELECT column_name(s) FROM table_name WHERE column_name BETWEEN value1 AND value2;```
-
-example used i our school.database.db
-```sqlite> 
-sqlite> SELECT * FROM school WHERE age BETWEEN 10 AND 20;
-|dj khalid |13|east|45000
-| KAMOTHO |12|EAST|75000
-| kinuthia |12|EAST |23000
-|scott|12|EAST|12000
-|KAMAU|16|WEST|142000
-```
-4. NULL 
-Let's say the administrator of our school.Database has found a new student. This student doesn't have a name yet, but should be added to our database right away. We can add data with missing values using the NULL keyword.
-
-Let's insert our new student into the database. Our abandoned student has a stream, but no name or age as of yet:
-
-INSERT INTO cats (name, age, breed) VALUES (NULL, NULL, "Tabby");
-
-``` INSERT INTO cats (name, age, breed) VALUES (NULL, NULL, "Tabby");
+```sql
+SELECT * FROM table_name ORDER BY column_name DESC LIMIT n;
 ```
 
-this should return something of the sort
+**Example — get the oldest cat:**
 
-5. count
-
-
-SQL aggregate functions are SQL statements that operate on groups of records in our database rather than individual records. For example, we can retrieve minimum and maximum values from a column, sum values in a column, get the average of a column's values, or count a number of records that meet certain conditions. You can learn more about these SQL aggregators [here](https://www.sqlclauses.com/sql+aggregate+functions) and  [here](https://zetcode.com/db/sqlite/select/)
-
-
-```SELECT COUNT([column name]) FROM [table name] WHERE [column name] = [value]
+```sql
+SELECT * FROM cats ORDER BY age DESC LIMIT 1;
 ```
-```SELECT COUNT(owner_id) FROM cats WHERE owner_id = 1;```
 
-5. Group by
-Lastly, we'll talk about the handy aggregate function GROUP BY. Like its name suggests, it groups your results by a given column.
+Sorts all cats oldest to youngest, returns only the first row.
 
-```SELECT breed, COUNT(breed) FROM cats GROUP BY breed;
+**Example — get the 2 oldest cats:**
+
+```sql
+SELECT * FROM cats ORDER BY age DESC LIMIT 2;
 ```
-This should return
 
+**Example from your school database:**
+
+```sql
+SELECT * FROM school ORDER BY age LIMIT 1;
+```
+
+Returns the youngest student in the school table.
+
+> **LIMIT without ORDER BY** returns an arbitrary set of rows — the database picks whichever it finds first. Always pair LIMIT with ORDER BY when order matters.
+
+---
+
+### 3. BETWEEN
+
+`BETWEEN` filters rows where a column's value falls within a range, inclusive of both endpoints.
+
+**Syntax:**
+
+```sql
+SELECT column_name(s) FROM table_name WHERE column_name BETWEEN value1 AND value2;
+```
+
+**Example from your school database:**
+
+```sql
+SELECT * FROM school WHERE age BETWEEN 10 AND 20;
+```
+
+Result:
+
+```
+name       age   stream   salary
+---------  ---   ------   ------
+dj khalid  13    east     45000
+KAMOTHO    12    EAST     75000
+kinuthia   12    EAST     23000
+scott      12    EAST     12000
+KAMAU      16    WEST     142000
+```
+
+`BETWEEN 10 AND 20` includes both 10 and 20. It is equivalent to `WHERE age >= 10 AND age <= 20`.
+
+**BETWEEN also works on text (alphabetical range) and dates:**
+
+```sql
+SELECT * FROM cats WHERE name BETWEEN 'A' AND 'M';
+```
+
+---
+
+### 4. NULL
+
+`NULL` represents a missing or unknown value. You can insert a row with `NULL` in any column that doesn't have a `NOT NULL` constraint.
+
+**Inserting a row with NULL values:**
+
+```sql
+INSERT INTO cats (name, age, breed) VALUES (NULL, NULL, 'Tabby');
+```
+
+This inserts a cat with no name and no age — only the breed is known.
+
+**Querying for NULL values:**
+
+You cannot use `=` to check for NULL. You must use `IS NULL` or `IS NOT NULL`:
+
+```sql
+-- Find all cats with no name
+SELECT * FROM cats WHERE name IS NULL;
+
+-- Find all cats that do have a name
+SELECT * FROM cats WHERE name IS NOT NULL;
+```
+
+> `WHERE name = NULL` will never return any rows — NULL is not equal to anything, not even itself. Always use `IS NULL`.
+
+---
+
+### 5. COUNT and Aggregate Functions
+
+Aggregate functions operate on a group of rows and return a single value. `COUNT` is the most common.
+
+**Syntax:**
+
+```sql
+SELECT COUNT(column_name) FROM table_name WHERE column_name = value;
+```
+
+**Example:**
+
+```sql
+SELECT COUNT(owner_id) FROM cats WHERE owner_id = 1;
+```
+
+Returns the number of cats that belong to owner 1.
+
+**COUNT(*) vs COUNT(column):**
+
+```sql
+SELECT COUNT(*) FROM cats;       -- counts all rows including NULLs
+SELECT COUNT(name) FROM cats;    -- counts only rows where name is NOT NULL
+```
+
+All aggregate functions:
+
+| Function | Purpose |
+|---|---|
+| `COUNT(column)` | Number of non-NULL values |
+| `SUM(column)` | Total of all values |
+| `AVG(column)` | Average of all values |
+| `MIN(column)` | Smallest value |
+| `MAX(column)` | Largest value |
+
+---
+
+### 6. GROUP BY
+
+`GROUP BY` groups rows that share the same value in a column, then lets you run aggregate functions on each group separately.
+
+**Syntax:**
+
+```sql
+SELECT column_name, COUNT(column_name) FROM table_name GROUP BY column_name;
+```
+
+**Example:**
+
+```sql
+SELECT breed, COUNT(breed) FROM cats GROUP BY breed;
+```
+
+Result:
+
+```
 breed               COUNT(breed)
 ------------------  ------------
 American Shorthair  1
 Calico              1
 Scottish Fold       1
 Tabby               3
+```
 
+Instead of counting all cats, it counts cats per breed. Each unique breed becomes its own group.
 
-Note on SELECT
-We are now familiar with this syntax:
+**GROUP BY with multiple aggregates:**
 
+```sql
+SELECT breed, COUNT(breed), AVG(age) FROM cats GROUP BY breed;
+```
+
+Gives you the count and average age per breed in one query.
+
+**HAVING — filtering groups:**
+
+`WHERE` filters individual rows before grouping. `HAVING` filters groups after grouping.
+
+```sql
+SELECT breed, COUNT(breed) AS total
+FROM cats
+GROUP BY breed
+HAVING total > 1;
+```
+
+Only returns breeds that have more than 1 cat. `HAVING` is to `GROUP BY` what `WHERE` is to `SELECT`.
+
+---
+
+### 7. The `tableName.columnName` Notation
+
+You can prefix any column with its table name to be explicit about where it comes from:
+
+```sql
+-- Both return the same result:
 SELECT name FROM cats;
-However, you may not know that this can be written like this as well:
-
 SELECT cats.name FROM cats;
-Both return:
+```
 
-name
-----------
-Maru
-Hana
-| `AVG(column)` | Average |
-Lil\' Bub
-Moe
-Patches
-SQLite allows us to explicitly state the tableName.columnName we want to select. This is particularly useful when we want data from two different tables.
+This becomes essential when querying multiple tables that share column names:
 
-Imagine we have another table called dogs with a column for the dog names:
+```sql
+-- This causes an error:
+SELECT name FROM cats, dogs;
+-- Error: ambiguous column name: name
 
-CREATE TABLE dogs (
-  id INTEGER PRIMARY KEY,
-  name TEXT
-);
-INSERT INTO dogs (name) VALUES ("Clifford");
-If we want to get the names of all the dogs and cats, we can no longer run a query with just the column name. SELECT name FROM cats,dogs; will return Error: ambiguous column name: name.
-
-Instead, we must explicitly follow the tableName.columnName syntax.
-
+-- This works:
 SELECT cats.name, dogs.name FROM cats, dogs;
-You may see this in the future. Don't let it trip you up.
+```
 
-Conclusion
-SQL gives you a lot of tools for fine-grained control over how to view data from various database tables. When you start working with larger databases that have 5000 or 50,000 rows in a table instead of 5, having this level of control is crucial for accessing and analyzing data that's useful to your applications, and can help you improve your application's performance significantly by limiting the amount of data being returned.
+You'll use this constantly in JOINs — covered in Lesson 7.
 
- ####  exercise 1 : Organizing Bears Lab (CodeGrade)
- Learning Goals:
-Use SQL to store data and retrieve it later on.
-Use SQLite to build relational databases on your computer.
-Perform CRUD operations on relational databases using SQL.
+---
 
+#### Exercise: Organizing Bears Lab
 
-Lab Structure
-This lab might seem a bit different than what you've seen before. Take a look at the file structure and read the comments to understand what each file is used for:
+**Learning Goals:**
+- Use SQL to store data and retrieve it later on
+- Use SQLite to build relational databases on your computer
+- Perform CRUD operations on relational databases using SQL
 
-├── __init__.py        # designates "python-p3-organizing-bears-lab" as package
-├── Pipfile
-├── Pipfile.lock
-├── README.md
-├── lib
-    ├── __init__.py    # designates "lib" as package
-│   ├── create.sql     # where you CREATE your schema
-│   ├── insert.sql     # where you INSERT your data
-│   ├── seed.sql       # data for in-memory test database
-│   ├── sql_queries.py # where you write your SELECT queries
-└── testing            # all the tests
-    ├── __init__.py    # designates "testing" as package
-    ├── create_test.py # this tests your create.sql file
-    ├── insert_test.py # this tests your insert.sql file
-    ├── select_test.py # this tests the queries you write in sql_queries.py
-    └── conftest.py    # configuration for pytest
-This lab uses the sqlite3 module from Python's standard library to allow us to connect to a SQL database from Python. How cool is that!? We'll use this module more in the lessons to come.
+**Lab file structure:**
 
-A Note on Testing
-Let's briefly go over what is happening in setup blocks that our tests will be using.
+```
+├── lib/
+│   ├── create.sql      # where you CREATE your schema
+│   ├── insert.sql      # where you INSERT your data
+│   ├── seed.sql        # data for in-memory test database
+│   └── sql_queries.py  # where you write your SELECT queries
+└── testing/
+    ├── create_test.py  # tests your create.sql
+    ├── insert_test.py  # tests your insert.sql
+    ├── select_test.py  # tests queries in sql_queries.py
+    └── conftest.py     # pytest configuration
+```
 
-connection = sqlite3.connect(":memory:")
+**Part 1: CREATE TABLE** — write in `lib/create.sql`:
 
-cursor = connection.cursor()
-
-create_file = open("lib/create.sql")
-create_as_string = create_file.read()
-cursor.executescript(create_as_string)
-Before each test, two important things happen.
-
-First, a new in-memory database is created. Why do we do this instead of creating a database file? Let's say we run our tests and they add ten items to our database. If we did not use an in-memory store, those would be in there forever. This way, our database gets thrown out after every running of the tests. You can learn more about in-memory databases hereLinks to an external site..
-
-Next, the test opens the .sql file, and runs the SQL code in that file in that in-memory database.
-
-Part 1: CREATE TABLE
-Get the tests in testing/create_test.py to pass by writing code in the lib/create.sql file. Your CREATE statement should look something like this:
-
+```sql
 CREATE TABLE bears (
-  //columns here
+  id          INTEGER,
+  name        TEXT,
+  age         INTEGER,
+  sex         TEXT,
+  color       TEXT,
+  temperament TEXT,
+  alive       BOOLEAN
 );
-Your columns should be the following types:
+```
 
-column	type
-id	integer
-name	text
-age	integer
-sex	text
-color	text
-temperament	text
-alive	boolean
-Read about SQLite3 DatatypesLinks to an external site. to determine what your insert values are going to be. Be sure to pay attention to how booleans are expressed in SQLite3.
+**Part 2: INSERT** — write in `lib/insert.sql`. Add these 8 bears:
+Mr. Chocolate, Rowdy, Tabitha, Sergeant Brown, Melissa, Grinch, Wendy, and one unnamed bear (use `NULL` for name).
 
-Part 2: INSERT
-Get the tests in testing/insert_test_.py to pass by writing code in the lib/insert.sql file. Input the following 8 bears (you can make up details about them, but make sex either 'M' or 'F'):
+**Part 3: SELECT** — write queries as Python strings in `lib/sql_queries.py`:
 
-Mr. Chocolate
-Rowdy
-Tabitha
-Sergeant Brown
-Melissa
-Grinch
-Wendy
-unnamed (refer back to how to create a record that doesn't have one value)
-Part 3: SELECT
-Get the tests in testing/select_test.py to pass. Note that for this section, the database will be seeded with external data from the lib/seed.sql file so don't expect it to reflect the data you added above.
-
-Note: Since it's a Python file, write your queries as strings in the global scope in the lib/sql_queries.py file. For example, to pass the first test, your Python string should look like this:
-
+```python
 select_all_female_bears_return_name_and_age = """
-    SELECT
-        bears.name,
-        bears.age
+    SELECT bears.name, bears.age
     FROM bears
-    WHERE sex='F';
+    WHERE sex = 'F';
 """
-You may be expected to use SQL statements that you're not particularly familiar with. Make sure you use the resources and Google to find the right statements.
+```
+
+The test database uses an in-memory SQLite database (`sqlite3.connect(":memory:")`). This means the database is wiped clean after every test run — no leftover data between runs.
 
 ---
 
