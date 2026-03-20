@@ -678,6 +678,14 @@ KAMAU      16    WEST     142000
 
 `BETWEEN 10 AND 20` includes both 10 and 20. It is equivalent to `WHERE age >= 10 AND age <= 20`.
 
+**NOT BETWEEN — the inverse:**
+
+```sql
+SELECT * FROM school WHERE age NOT BETWEEN 10 AND 20;
+```
+
+Returns all students whose age is outside that range — younger than 10 or older than 20.
+
 **BETWEEN also works on text (alphabetical range) and dates:**
 
 ```sql
