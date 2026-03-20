@@ -1620,4 +1620,3 @@ WHERE a.id < b.id;
 8. ✅ In SQLite, simulate FULL OUTER JOIN using `LEFT JOIN ... UNION ... LEFT JOIN`
 9. ✅ Use `LEFT JOIN + IS NULL` (anti-join) to find records with no relationship
 10. ✅ When in doubt, start with INNER JOIN and loosen to LEFT JOIN if you're missing rows you expected to see
-8. ✅ In SQLite, simulate FULL OUTER JOIN using `LEFT JOIN ... UNION ... LEFT JOIN`
