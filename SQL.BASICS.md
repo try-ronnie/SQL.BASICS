@@ -1016,7 +1016,17 @@ SELECT name FROM students WHERE id IN (8, 10);
 -- returns: George, Maria
 ```
 
-That's 3 separate queries. JOINs collapse all of that into one.
+That's 3 separate queries. JOINs collapse all of that into one:
+
+```sql
+SELECT students.name
+FROM students
+INNER JOIN students_teachers ON students.id = students_teachers.student_id
+INNER JOIN teacher ON students_teachers.teacher_id = teacher.id
+WHERE teacher.name = 'Kamotho';
+```
+
+One query. Same result. That's the power of JOINs.
 
 ---
 
