@@ -544,6 +544,10 @@ This pattern:
 6. ✅ Write SQL in `.sql` files for reusability
 7. ✅ Use meaningful table and column names
 8. ✅ Choose appropriate data types for your data
+9. ✅ Always pair `LIMIT` with `ORDER BY` so results are predictable
+10. ✅ Use `IS NULL` / `IS NOT NULL` — never `= NULL`
+11. ✅ Use `table.column` notation in any query involving more than one table
+12. ✅ Use a join table for many-to-many relationships
 
 ---
 
