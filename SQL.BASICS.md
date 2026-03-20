@@ -1378,6 +1378,19 @@ dogo      Kinuthia
 
 > ⚠️ **Warning:** CROSS JOIN on large tables can produce enormous result sets. 1000 rows × 1000 rows = 1,000,000 rows. Use with care.
 
+**Filtering a CROSS JOIN:**
+
+You can add a `WHERE` clause to a CROSS JOIN to filter the combinations down:
+
+```sql
+SELECT students.name AS student, teacher.name AS teacher
+FROM students
+CROSS JOIN teacher
+WHERE teacher.gender = 'F';
+```
+
+This gives every student paired with only the female teachers — 11 students × 2 female teachers = 22 rows.
+
 ---
 
 ### 6. SELF JOIN
