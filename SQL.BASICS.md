@@ -636,6 +636,16 @@ Returns the youngest student in the school table.
 
 > **LIMIT without ORDER BY** returns an arbitrary set of rows — the database picks whichever it finds first. Always pair LIMIT with ORDER BY when order matters.
 
+**LIMIT with OFFSET — skip rows:**
+
+`OFFSET` tells SQL how many rows to skip before starting to return results. Useful for pagination.
+
+```sql
+SELECT * FROM cats ORDER BY age DESC LIMIT 2 OFFSET 2;
+```
+
+Skips the 2 oldest cats, then returns the next 2. So if you had 5 cats sorted by age, this gives you cats ranked 3rd and 4th oldest.
+
 ---
 
 ### 3. BETWEEN
