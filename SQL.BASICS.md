@@ -1444,6 +1444,8 @@ FROM employees AS e
 LEFT JOIN employees AS m ON e.manager_id = m.id;
 ```
 
+The CEO or top-level employee has no manager, so their `manager_id` is NULL. Using LEFT JOIN ensures they still appear in the result with `NULL` for manager — INNER JOIN would drop them entirely.
+
 **When to use SELF JOIN:**
 - Hierarchical data (employees and their managers, categories and subcategories)
 - Finding duplicate or related records within the same table
