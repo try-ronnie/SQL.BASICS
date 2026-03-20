@@ -1322,6 +1322,8 @@ NULL          Rachel
 
 Every student and every teacher appears. Unmatched students get `NULL` for teacher. Rachel (unmatched teacher) gets `NULL` for student.
 
+> **Why use UNION and not UNION ALL?** `UNION` removes duplicate rows automatically. `UNION ALL` keeps all rows including duplicates. In the FULL OUTER JOIN simulation, matched rows would appear in both halves — `UNION` deduplicates them so you only see each matched pair once.
+
 **When to use FULL OUTER JOIN:**
 - Auditing — find all unmatched records on both sides at once
 - Data reconciliation between two datasets
