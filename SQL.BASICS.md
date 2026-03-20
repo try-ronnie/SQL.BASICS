@@ -755,6 +755,8 @@ SELECT COUNT(*) FROM cats;       -- counts all rows including NULLs
 SELECT COUNT(name) FROM cats;    -- counts only rows where name is NOT NULL
 ```
 
+> The difference matters when your column has NULL values. `COUNT(*)` counts the row regardless. `COUNT(column)` skips it if that column is NULL.
+
 All aggregate functions:
 
 | Function | Purpose |
