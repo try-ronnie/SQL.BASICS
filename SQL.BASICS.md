@@ -1556,7 +1556,8 @@ You can combine JOINs with aggregate functions like `COUNT`, `GROUP BY`, etc.
 SELECT t.name AS teacher, COUNT(st.student_id) AS student_count
 FROM teacher AS t
 LEFT JOIN students_teachers AS st ON t.id = st.teacher_id
-GROUP BY t.id, t.name;
+GROUP BY t.id, t.name
+ORDER BY student_count DESC;
 ```
 
 Result:
