@@ -10,5 +10,7 @@ class Provider :
         self.price_charge = price_charge
         # no self.id = id since python doesnt know how to make the next id unique ... thats sqlite3 's work 
     
-    
+    # we want to create the table using the class and connect it to the database 
+    # to connect to the database we need CURSOR variable that executes our sql
+    #
     
