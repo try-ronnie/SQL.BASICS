@@ -29,6 +29,7 @@ class Provider :
     
     # this persists **an instance that is already made** to the table
     # bound prmeters
+    # we use self since this method takes a class instances(self) then persists it to the table
     def save (self):
         ''' PERSISTS AN ALREADY MADE INSTANCE TO THE TABLE'''
         sql = '''
@@ -36,6 +37,13 @@ class Provider :
         '''
         CURSOR.execute(sql,(self.name,self.country,self.capacity, self.price_charge))
         CONN.commit()
-        
+    
+    @classmethod
+    def Update_value(cls):
+        '''UPDATES VALUE IN A TABLE ROW'''
+        sql = '''
+        UPDATE TABLE provider 
+        '''
+
 
     
