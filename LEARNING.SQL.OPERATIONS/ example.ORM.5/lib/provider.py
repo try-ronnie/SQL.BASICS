@@ -10,9 +10,29 @@ class Provider :
         self.price_charge = price_charge
         # no self.id = id since python doesnt know how to make the next id unique ... thats sqlite3 's work 
     
+
     # we want to create the table using the class and connect it to the database 
-    # we use cls 
+    @classmethod
+    def create_table(cls):
+        ''' CREATING THE PROVIDER TABLE STRUCTURE'''
+        sql = '''
+            CREATE TABLE IF NOT EXISTS PROVIDER (
+            id INTERGER PRIMARY KEY,
+            name TEXT NOT NULL ,
+            country TEXT NOT NULL CHECK(country in ('UGANDA','ETHIOPIA','TANZANIA','SUDAN')),
+            capacity integer NOT NULL CHECK (capacity > 15000),
+            price_charge integer;
+            )
+            '''
+        CURSOR.execute(sql)
+        CONN.commit()
     
-    def create_table():
+    # this creates a 
+    def save (self):
+        ''' PERSISTS AN ALREADY MADE INSTANCE TO THE TABLE'''
+        sql = '''
+        INSERT INTO provider (name , country ,capacity , price_charge) VALUES (?,?,?,?);
+        '''
+        CURSOR.execute(sql,(self.name,self.country,self.capacity, self.price_charge))
 
     
