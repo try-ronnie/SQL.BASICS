@@ -2,5 +2,13 @@
 from __init__ import CONN , CURSOR
 class Provider :
     #initialize the instance
-    def __init__(self):
-         
+    #remember to put the id so that the classes can be mapped to the tables with primary keys 
+    def __init__(self , name:str , country:str, capacity:int , price_charge:int, id = None):
+        self.name = name 
+        self.country = country
+        self.capacity = capacity
+        self.price_charge = price_charge
+        # no self.id = id since python doesnt know how to make the next id unique ... thats sqlite3 's work 
+    
+    
+    
