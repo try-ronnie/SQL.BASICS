@@ -27,12 +27,15 @@ class Provider :
         CURSOR.execute(sql)
         CONN.commit()
     
-    # this creates a 
+    # this persists **an instance that is already made** to the table
+    # bound prmeters
     def save (self):
         ''' PERSISTS AN ALREADY MADE INSTANCE TO THE TABLE'''
         sql = '''
         INSERT INTO provider (name , country ,capacity , price_charge) VALUES (?,?,?,?);
         '''
         CURSOR.execute(sql,(self.name,self.country,self.capacity, self.price_charge))
+        CONN.commit()
+        
 
     
