@@ -5,3 +5,4 @@ CONN = sqlite3.connect('oil_reolution') # this is a constructor since it creates
 CURSOR = CONN.cursor() 
 #Creates a Cursor object from the connection. The cursor is used to execute SQL statements and fetch results from the database. The cursor is stored in the variable CURSOR
 
+
