@@ -1,0 +1,1 @@
+INSERT INTO animals (name , age , breed , alive) VALUES ('JAMAL' ,12 , 'ANGUS' , 0)
