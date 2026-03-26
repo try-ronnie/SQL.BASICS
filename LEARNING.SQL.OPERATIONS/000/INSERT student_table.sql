@@ -1,0 +1,1 @@
+INSERT INTO student(name , age , gender , teacher_id) VALUES ('Christine ' , 17 , 'F' , 1 ) , ('Patrick' , 12 , 'M', 2) , ('Iano' , 16 , 'M' , 2) , (' Ronnie ' , 9 , 'M' , 1) , ('Anitah', 10 , 'F' , 3) , ('Daniel', 12 , 'M', 3 ) , ('Richard' , 11 , 'M' , 4 ) , (' Ruto' , 10 , 'M' , 1) , ('Maggie' , 9 , 'F' , 2);

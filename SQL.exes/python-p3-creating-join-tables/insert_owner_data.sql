@@ -1,0 +1,1 @@
+INSERT INTO owner (name) VALUES ('mugomugo') , ('Sophie') , ('Penny') ;  

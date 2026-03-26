@@ -1,0 +1,1 @@
+INSERT INTO students_teachers (student_id , teacher_id) VALUES (8, 1) , (9,3) , (10, 2) , (10,1);

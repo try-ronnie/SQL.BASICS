@@ -1,0 +1,1 @@
+DELETE FROM cat_owners  WHERE cat_id = 1 LIMIT 1 ;

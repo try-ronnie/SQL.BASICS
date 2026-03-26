@@ -1,0 +1,3 @@
+CREATE TABLE owner(
+id INTEGER PRIMARY KEY , 
+name TEXT);
