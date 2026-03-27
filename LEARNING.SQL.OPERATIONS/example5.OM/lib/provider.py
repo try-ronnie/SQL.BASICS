@@ -50,7 +50,9 @@ class Provider:
         WHERE id = ?
         '''
         CURSOR.execute(sql , (self.name ,self.capacity ,self.country, self.id))
+        type(self).all[self.id] = self
         CONN.commit()
+
 
     #cache reloader
     @classmethod
@@ -96,4 +98,24 @@ class Provider:
             '''
         row_by_name = CURSOR.execute(sql , (name,)).fetchone()#this retruns a list of the tuple choosen from our table that fit the constraints 
         return cls.instance_from_db(row_by_name) if row_by_name else None # run the method to cache the value and ensure that cache memory is upto date
+    @classmethod
+    def  all_high_capacity (cls):
+        '''RETURN ALL HIGH CAPACITY'''
+        sql = '''
+            SE;ECT * FROM providers ,
+            WHERE capacity > 50000
+            '''
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]  if rows else None
     
+    @classmethod
+    def all_mid_capacity(cls):
+        ''''''
+        sql = '''
+            SELECT * FROM providers,
+            WHERE capacity > 30000 AND capacty < 5000;
+            '''
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db]
+    # in gaining info from the db also remember to catch or during updating ... always rmember to catch where data is involved 
+
