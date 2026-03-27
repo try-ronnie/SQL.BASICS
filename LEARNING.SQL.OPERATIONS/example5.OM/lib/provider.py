@@ -35,4 +35,65 @@ class Provider:
     
     @classmethod
     def drop_table (cls):
-        sql
+        '''DOP THE WHOLE '''
+        sql = '''   
+            DROP TABLE IF EXISTS providers;
+            '''
+        CURSOR.execute(sql)
+        CONN.commit()
+
+    def update_full_stats(self):
+        '''UPDATE TABLE according to the current instance'''
+        sql = ''' 
+        UPDATE providers,
+        SET name = ? , capacity = ? , country = ?
+        WHERE id = ?
+        '''
+        CURSOR.execute(sql , (self.name ,self.capacity ,self.country, self.id))
+        CONN.commit()
+
+    #cache reloader
+    @classmethod
+    def instance_from_db(cls , row):
+        '''recieves row from db ... uses this to update the memory in cache for faster retrun queries'''
+        provider = cls.all.get[row[0]] # checks if the row 
+        if provider: # if the value returns is in the dict / cache
+            provider.name = row[1]
+            provider.capactiy = row[2]
+            provider.country = row[3] 
+            # ensure that the values in the dict match the ones in the db.... the db is the source of truth
+        else: # if None is returned ... meaning the value is not a dit ... this is a falsy so it runs else
+            # if the value is not there but is located in the db we should create an instance and save it to the dict as cachd 
+            provider = cls(row[1], row[2] , row[3]) # use the values from row (the single list /row from the db) ... remember what gets values from where ... 
+            provider.id = row[0]
+            cls.all[row[0]] = provider
+        return provider
+    
+    @classmethod
+    def get_all(cls):
+        ''''''
+        sql = '''
+            SELECT * FROM providers;
+            '''
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows] # when retrieving remmber to update eache row in our cache 
+
+    @classmethod
+    def find_by_id(cls , id):
+        '''find privider from dbt by id'''
+        sql = '''
+        SELECT * FROM providers,
+        WHERE id = ?;
+        '''
+        id_row = CURSOR.execute(sql , (id,)).fetchone()
+        return cls.instance_from_db(id_row) if id_row else None 
+    @classmethod
+    def find_by_name(cls,name) :
+        '''FIND A VALUE BY NAME FROM THE DATABAE'''
+        sql = ''' 
+            SELECT * FROM providers,
+            WHERE name = ?;
+            '''
+        row_by_name = CURSOR.execute(sql , (name,)).fetchone()#this retruns a list of the tuple choosen from our table that fit the constraints 
+        return cls.instance_from_db(row_by_name) if row_by_name else None # run the method to cache the value and ensure that cache memory is upto date
+    
