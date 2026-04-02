@@ -3,7 +3,7 @@ from __init__ import CURSOR , CONN
 class Provider:
     #cache
     all = {}
-    def __init__(self, name , capacity , country , id= None):
+    def __init__(self, name:str , capacity:int , country , id= None):
         self.id = id
         self.name = name
         self.capacity = capacity
@@ -22,7 +22,11 @@ class Provider:
             '''
         CURSOR.execute(sql)
         CONN.commit()
-    
+    def create_save(cls, name ,capacity , country):
+        '''CREATE AN INSTANCE AND SAVE IT DIRECTLY TO THE TABLE'''
+        provider = cls(name , capacity , country)
+        provider.save() # remember that our save function carries out the giving of the id and caching 
+
     #persist provider instances to the table and update dache memory instance id
     def save (self):
         ''' PESIST BOTH DB AND CACHE , DB AS SOUCE OF TUTH'''
