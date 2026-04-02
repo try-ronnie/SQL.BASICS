@@ -43,7 +43,7 @@ class Oil_station:
     def save(self):
         '''PERSIST INSTANCE TO DB AND UPDATE CAC'''
         sql = '''
-        INSERT INTO oil_station(name,reserve_litres,location , provider_id) VALUES (?,?,?,?)
+        INSERT INTO oil_station(name,reserve_litres,location , provider_id) VALUES (?,?,?,?);
         '''
         self.id = CURSOR.lastrowid
         CURSOR.execute(sql , (self.name ,self,self.reserve_litres , self.location, self.provide_id))
@@ -64,8 +64,43 @@ class Oil_station:
         sql = '''   
         UPDATE oil_stations
         SET name = ? , reserve_litres = ? , location = ? , provider_id
+        ;
         '''
+        CURSOR.execute(sql,(self.name , self.reserve_litres, self.location , self.provide_id))
+        CONN.commit
+        type(self).all[self.id] = self
         
+    
+    ##ADDING AN ALTER QUERY LATER ON
+
+
+    # recieving a row from the db
+    def instance_from_db(cls , row):
+        
+        oil_station = cls.all.get(row[0]) # this gets a whole instance from our dict using the keys that were passed on as the ids of each table row
+        if oil_station:
+            oil_station.name = row[1]
+            oil_station.reserve_litres = row[2]
+            oil_station.location = row[3]
+            oil_station.provider_id = row [4]
+            # here we update the memory existing in or dict cache
+        else:
+            # if not in cache just create its instance and push to cache
+            # you dont have to carry out sql to push to cache sice its already in the database
+            oil_station = cls(row[1], row[2] , row[3], row[4])
+            oil_station.id = row[0]
+            cls.all[oil_station.id] = oil_station
+        
+    
+    #carrying out a simple get all data query
+    def get_all (cls):
+        '''GET ALLL DATA FROM THE TABLE '''
+        sql = '''
+        SELECT * FROM oil_stations;
+        '''
+        oil_stations = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db for row in oil_stations] # this retruns everything and ensure also that the cache is updated rememebr the table is the source of truth
+    
     
 
 
