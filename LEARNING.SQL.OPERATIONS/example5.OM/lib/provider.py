@@ -22,11 +22,18 @@ class Provider:
             '''
         CURSOR.execute(sql)
         CONN.commit()
+
+
+    @classmethod
     def create_save(cls, name ,capacity , country):
         '''CREATE AN INSTANCE AND SAVE IT DIRECTLY TO THE TABLE'''
         provider = cls(name , capacity , country)
         provider.save() # remember that our save function carries out the giving of the id and caching 
-
+    #practically this function just creates an instance of the cls with values paassed into it which ... we use cls to create the instance ... since creation f instances happen at hte cls level
+    
+    
+    
+    
     #persist provider instances to the table and update dache memory instance id
     def save (self):
         ''' PESIST BOTH DB AND CACHE , DB AS SOUCE OF TUTH'''
@@ -37,6 +44,7 @@ class Provider:
         self.id = CURSOR.lastrowid # give the id so that you can piush with the correct id to cache
         type(self).all[self.id] = self # store persisted value to cache 
     
+    #drops the whole data in the table and the table its self
     @classmethod
     def drop_table (cls):
         '''DOP THE WHOLE '''
@@ -46,6 +54,7 @@ class Provider:
         CURSOR.execute(sql)
         CONN.commit()
 
+    #updating data in a table row  ... we use th update ... remember its a row  ... hence we use self
     def update_full_stats(self):
         '''UPDATE TABLE according to the current instance'''
         sql = ''' 
@@ -54,15 +63,18 @@ class Provider:
         WHERE id = ?
         '''
         CURSOR.execute(sql , (self.name ,self.capacity ,self.country, self.id))
-        type(self).all[self.id] = self
+        type(self).all[self.id] = self # remember to keep the cache updated to the latest table values 
         CONN.commit()
 
 
     #cache reloader
+    # this function recieves a single row fetched from the table as a list containing the data
+    # we then need to update the cache accordingly 
+
     @classmethod
     def instance_from_db(cls , row):
         '''recieves row from db ... uses this to update the memory in cache for faster retrun queries'''
-        provider = cls.all.get[row[0]] # checks if the row 
+        provider = cls.all.get[row[0]] # checks if the row exists ... we use the id as key 
         if provider: # if the value returns is in the dict / cache
             provider.name = row[1]
             provider.capactiy = row[2]
@@ -75,6 +87,9 @@ class Provider:
             cls.all[row[0]] = provider
         return provider
     
+
+    # most of these from here are just COMPLE SELECT METHODS 
+
     @classmethod
     def get_all(cls):
         ''''''
@@ -82,7 +97,7 @@ class Provider:
             SELECT * FROM providers;
             '''
         rows = CURSOR.execute(sql).fetchall()
-        return [cls.instance_from_db(row) for row in rows] # when retrieving remmber to update eache row in our cache 
+        return [cls.instance_from_db(row) for row in rows] # when retrieving remmber to update eache row in our cache
 
     @classmethod
     def find_by_id(cls , id):
