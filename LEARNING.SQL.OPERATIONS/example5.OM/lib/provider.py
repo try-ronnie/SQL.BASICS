@@ -122,7 +122,7 @@ class Provider:
         '''RETURN ALL HIGH CAPACITY'''
         sql = '''
             SE;ECT * FROM providers ,
-            WHERE capacity > 50000
+            WHERE capacity > 50000 ;
             '''
         rows = CURSOR.execute(sql).fetchall()
         return [cls.instance_from_db(row) for row in rows]  if rows else None

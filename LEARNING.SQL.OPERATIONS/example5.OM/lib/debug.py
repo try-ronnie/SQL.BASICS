@@ -8,7 +8,6 @@ def fill_in_providers():
     Provider.create_save('KENOL' , 6000 , 'SUDAN')
     
 
-
 fill_in_providers()
 ipdb.set_trace()
     
