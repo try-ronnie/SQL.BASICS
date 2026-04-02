@@ -48,6 +48,7 @@ class Oil_station:
         self.id = CURSOR.lastrowid
         CURSOR.execute(sql , (self.name ,self,self.reserve_litres , self.location, self.provide_id))
         type(self).all[self.id] = self # this adds to the cache data to allow the returning back of the data
+        CONN.commit
 
 
     #but we would want to create it automatically and push the instance to the database
@@ -94,12 +95,12 @@ class Oil_station:
     
     #carrying out a simple get all data query
     def get_all (cls):
-        '''GET ALLL DATA FROM THE TABLE '''
+        '''GET ALL DATA FROM THE TABLE '''
         sql = '''
         SELECT * FROM oil_stations;
         '''
         oil_stations = CURSOR.execute(sql).fetchall()
-        return [cls.instance_from_db for row in oil_stations] # this retruns everything and ensure also that the cache is updated rememebr the table is the source of truth
+        return [cls.instance_from_db(row) for row in oil_stations] # this retruns everything and ensure also that the cache is updated rememebr the table is the source of truth
     
     
 

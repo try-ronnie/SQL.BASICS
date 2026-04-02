@@ -17,7 +17,7 @@ class Provider:
             id INTEGER PRIMARY KEY, 
             name TEXT NOT NULL, 
             capacity INTEGER CHECK (capacity > 5000),
-            country TEXT CHECK (country in ('SUDAN','SOMALIA','TANZANIA','UGANDA'))
+            country TEXT NOT NULL CHECK (country in ('SUDAN','SOMALIA','TANZANIA','UGANDA'))
             );
             '''
         CURSOR.execute(sql)
@@ -28,7 +28,8 @@ class Provider:
     def create_save(cls, name ,capacity , country):
         '''CREATE AN INSTANCE AND SAVE IT DIRECTLY TO THE TABLE'''
         provider = cls(name , capacity , country)
-        provider.save() # remember that our save function carries out the giving of the id and caching 
+        provider.save()
+    # remember that our save function carries out the giving of the id and caching 
     #practically this function just creates an instance of the cls with values paassed into it which ... we use cls to create the instance ... since creation f instances happen at hte cls level
     
     
@@ -38,11 +39,12 @@ class Provider:
     def save (self):
         ''' PESIST BOTH DB AND CACHE , DB AS SOUCE OF TUTH'''
         sql = '''
-            INSERT INTO providers (name, capacicty , name) VAALUES (?,?,?);
+            INSERT INTO providers (name, capacity , country) VALUES (?,?,?);
             '''
         CURSOR.execute(sql ,(self.name , self.capacity , self.country))
         self.id = CURSOR.lastrowid # give the id so that you can piush with the correct id to cache
         type(self).all[self.id] = self # store persisted value to cache 
+        CONN.commit()
     
     #drops the whole data in the table and the table its self
     @classmethod
