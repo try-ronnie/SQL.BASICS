@@ -8,7 +8,7 @@ class Oil_station:
         self.name = name 
         self.reserve_litres = reserve_litres
         self.location = location
-        self.provide_id = provider_id # this is a foreign key
+        self.provider_id = provider_id # this is a foreign key
 
 
     #create table oil_stations 
@@ -41,14 +41,14 @@ class Oil_station:
     
     #method to save an instance to cache and persist it to the database
     def save(self):
-        '''PERSIST INSTANCE TO DB AND UPDATE CAC'''
+        '''PERSIST INSTANCE TO DB AND UPDATE CACHE'''
         sql = '''
-        INSERT INTO oil_station(name,reserve_litres,location , provider_id) VALUES (?,?,?,?);
+        INSERT INTO oil_stations(name,reserve_litres,location , provider_id) VALUES (?,?,?,?);
         '''
         self.id = CURSOR.lastrowid
-        CURSOR.execute(sql , (self.name ,self,self.reserve_litres , self.location, self.provide_id))
+        CURSOR.execute(sql , (self.name ,self.reserve_litres , self.location, self.provider_id))
         type(self).all[self.id] = self # this adds to the cache data to allow the returning back of the data
-        CONN.commit
+        CONN.commit()
 
 
     #but we would want to create it automatically and push the instance to the database
@@ -91,7 +91,7 @@ class Oil_station:
             oil_station = cls(row[1], row[2] , row[3], row[4])
             oil_station.id = row[0]
             cls.all[oil_station.id] = oil_station
-        
+        return row 
     
     #carrying out a simple get all data query
     def get_all (cls):
@@ -100,7 +100,7 @@ class Oil_station:
         SELECT * FROM oil_stations;
         '''
         oil_stations = CURSOR.execute(sql).fetchall()
-        return [cls.instance_from_db(row) for row in oil_stations] # this retruns everything and ensure also that the cache is updated rememebr the table is the source of truth
+        return [cls.instance_from_db(row) for row in oil_stations] # this retuns everything and ensure also that the cache is updated rememeber the table is the source of truth
     
     
 

@@ -10,11 +10,20 @@ def fill_in_providers():
     Provider.create_save('ALHUSSAIM.ORC', 150000 , 'SOMALIA')
     Provider.create_save('ALFAKIR.JRQ', 100000 , 'TANZANIA')
     Provider.create_save('DUBAJ.IPL' , 70000 , 'UGANDA')
-    Oil_station.create_save('RUbis', 300000 , 'KINGONGO' , 2)
+
+    Oil_station.drop_table()
+    Oil_station.create_table()
+    Oil_station.create_save('RUBIS', 300000 , 'KINGONGO' , 2)
     Oil_station.create_save('OLA', 450000 , 'KIGANJO' , 1)
     Oil_station.create_save('KENOL', 560000 , 'MWIEGA' , 3)
     Oil_station.create_save('NATIONAL OIL', 300000 , 'CHAKA' , 4)
-    Oil_station.create_save('', 300000 , 'KINGONGO' , 2)
+    Oil_station.create_save('TOTAL', 300000 , 'KINGONGO' , 2)
+    Oil_station.create_save('SHELL',589234 ,'RINGROAD' , 3)
+    Oil_station.create_save('RINN', 304440 , 'KAFARU' , 4)
+    Oil_station.create_save('JAKOLA', 348484 , 'SKUTA' , 1)
+
+
+
 
 
 
