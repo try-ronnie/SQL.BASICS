@@ -42,14 +42,14 @@ class Provider:
             INSERT INTO providers (name, capacity , country) VALUES (?,?,?);
             '''
         CURSOR.execute(sql ,(self.name , self.capacity , self.country))
-        self.id = CURSOR.lastrowid # give the id so that you can piush with the correct id to cache
+        self.id = CURSOR.lastrowid # give the id so that you can push with the correct id to cache
         type(self).all[self.id] = self # store persisted value to cache 
         CONN.commit()
     
     #drops the whole data in the table and the table its self
     @classmethod
     def drop_table (cls):
-        '''DOP THE WHOLE '''
+        '''DOP THE WHOLE '''-
         sql = '''   
             DROP TABLE IF EXISTS providers;
             '''
