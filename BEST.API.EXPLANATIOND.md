@@ -1,4 +1,5 @@
-What is a REST API?
+# What is a REST API?
+
 A REST API is an application programming interface (API) that follows the design principles of the REST architectural style. REST is short for representational state transfer, and is a set of rules and guidelines about how you should build a web API.
 
 What's an API?
