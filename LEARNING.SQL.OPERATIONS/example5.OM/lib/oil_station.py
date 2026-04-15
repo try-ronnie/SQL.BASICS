@@ -67,7 +67,7 @@ class Oil_station:
         SET name = ? , reserve_litres = ? , location = ? , provider_id
         ;
         '''
-        CURSOR.execute(sql,(self.name , self.reserve_litres, self.location , self.provide_id))
+        CURSOR.execute(sql,(self.name , self.reserve_litres, self.location , self.provider_id))
         CONN.commit
         type(self).all[self.id] = self
         
