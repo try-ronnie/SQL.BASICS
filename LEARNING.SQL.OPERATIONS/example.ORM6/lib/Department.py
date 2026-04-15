@@ -15,14 +15,14 @@ class Department:
     @classmethod
     def create_table(cls):
         '''this creates a new table with the required columns'''
-        sql = '''
-        CREATE TABLE departments(
-        id INTEGER PRIMARY KEY
-        name TEXT NOT NULL , 
-        location TEXT NOT NULL
-        )
-        '''
-        CURSOR.execute(sql)# this runs the sql command
+        sql ='''
+                CREATE TABLE departments(
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                location TEXT NOT NULL
+                )
+            '''
+        CURSOR.execute(sql) # this runs the sql command
         CONN.commit()# this ensures that the changes made are commited to the 
 
     #we then need a method to commit the instances to the table 
@@ -54,11 +54,11 @@ class Department:
     def update_data(self):
         '''this updates the row according to the current instance's name and locaation(attributes)'''
         sql = '''
-            UPDATE TABLE deparments ,
-            SET name = ? , location = ?
+            UPDATE departments
+            SET name = ?, location = ?
             WHERE id = ?
             '''
-        CURSOR.execute(sql, (self.name , self.location, self.id))
+        CURSOR.execute(sql, (self.name, self.location, self.id))
         type(self).all[self.id] = self # this is to save it to the cache
         CONN.commit()
     
@@ -76,6 +76,7 @@ class Department:
             instance = Department(row[1] ,row[2])
             instance.id = row[0]
             Department.all[row[0]] = instance
+        return instance
     
     @classmethod
     def get_all (cls):
@@ -83,5 +84,5 @@ class Department:
         sql = '''
         SELECT * FROM departments
         '''
-        rows = CURSOR.execute().fetchall() # this returns all the rows fetched
+        rows = CURSOR.execute(sql).fetchall() # this returns all the rows fetched
         return [cls.instance_from_db(row) for row in rows]
