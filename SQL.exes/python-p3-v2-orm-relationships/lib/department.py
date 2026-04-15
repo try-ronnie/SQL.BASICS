@@ -139,7 +139,8 @@ class Department:
 
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
-    def employee_list(self):
+    
+    def employees(self):
         '''QUERY THE EMOYEES TABOLE TO PROVIDE A LIST OF THE EQUIRED EMPLOYEES'''
         from employee import Employee
         sql = '''
